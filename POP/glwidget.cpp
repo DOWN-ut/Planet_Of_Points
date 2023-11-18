@@ -61,6 +61,12 @@ GLWidget::GLWidget(QWidget *parent)
       m_xRot(0),
       m_yRot(0),
       m_zRot(0),
+      m_xPos(0),
+      m_yPos(0),
+      m_zPos(0),
+      m_xTranslation(0),
+      m_yTranslation(0),
+      m_zTranslation(0),
       m_program(0)
 {
     m_core = QSurfaceFormat::defaultFormat().profile() == QSurfaceFormat::CoreProfile;
@@ -71,11 +77,32 @@ GLWidget::GLWidget(QWidget *parent)
         fmt.setAlphaBufferSize(8);
         setFormat(fmt);
     }
+
+    setFocusPolicy(Qt::StrongFocus);
+
+    moveStep = 7;
+    deltaTime = 0.05;
+
+    timer = new QTimer(this);
+    connect(timer,&QTimer::timeout,this,&GLWidget::updateAll);
+    timer->start(deltaTime);
 }
 
 GLWidget::~GLWidget()
 {
     cleanup();
+}
+
+void GLWidget::updateAll()
+{
+    m_xPos += m_xTranslation;
+    m_yPos += m_yTranslation;
+    m_zPos += m_zTranslation;
+    cout << "Update" << endl;
+
+    m_points.updateAll(deltaTime);
+
+    update();
 }
 
 QSize GLWidget::minimumSizeHint() const
@@ -126,6 +153,32 @@ void GLWidget::setZRotation(int angle)
         //Completer pour emettre un signal
         emit changedZRotation(angle);
         update();
+    }
+}
+
+void GLWidget::keyPressEvent(QKeyEvent *event)
+{
+    switch(event->key())
+    {
+    case  Qt::Key_Z : m_zTranslation = -moveStep * deltaTime; break;
+    case  Qt::Key_S : m_zTranslation = moveStep * deltaTime; break;
+    case  Qt::Key_Q : m_xTranslation = moveStep * deltaTime; break;
+    case  Qt::Key_D : m_xTranslation = -moveStep * deltaTime; break;
+    case  Qt::Key_Space : m_yTranslation = moveStep * deltaTime; break;
+    case  Qt::Key_Shift : m_yTranslation = -moveStep * deltaTime; break;
+    }
+}
+
+void GLWidget::keyReleaseEvent(QKeyEvent *event)
+{
+    switch(event->key())
+    {
+    case  Qt::Key_Z : m_zTranslation = 0; break;
+    case  Qt::Key_S : m_zTranslation = 0; break;
+    case  Qt::Key_Q : m_xTranslation = 0; break;
+    case  Qt::Key_D : m_xTranslation = 0; break;
+    case  Qt::Key_Space : m_yTranslation = 0; break;
+    case  Qt::Key_Shift : m_yTranslation = 0; break;
     }
 }
 
@@ -235,6 +288,8 @@ void GLWidget::paintGL()
     m_model.rotate(180.0f - (m_xRot / 16.0f), 1, 0, 0);
     m_model.rotate(m_yRot / 16.0f, 0, 1, 0);
     m_model.rotate(m_zRot / 16.0f, 0, 0, 1);
+
+    m_model.translate(m_xPos,m_yPos,m_zPos);
 
     QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
     m_program->bind();

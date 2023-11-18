@@ -13,10 +13,12 @@ class GravityManager
 private:
     QVector<QVector3D> barycenters;
     static GravityManager* instance;
-    const float gravityForce = 1;
+    float gravityForce;
 
 public:
     GravityManager();
+
+    const QVector3D barycenter(int i = 0){ return barycenters.at(i);}
 
     void update(float deltaTime);
     void processBarycenters();

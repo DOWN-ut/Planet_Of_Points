@@ -57,6 +57,8 @@
 #include <QOpenGLBuffer>
 #include <QMatrix4x4>
 #include "points.h"
+#include <QKeyEvent>
+#include <QTimer>
 
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
 
@@ -95,6 +97,11 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
 
+    void updateAll();
+
+    void keyPressEvent(QKeyEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
+
 private:
     void setupVertexAttribs();
 
@@ -102,7 +109,14 @@ private:
     int m_xRot;
     int m_yRot;
     int m_zRot;
+    float m_xPos,m_xTranslation;
+    float m_yPos,m_yTranslation;
+    float m_zPos,m_zTranslation;
     QPoint m_last_position;
+
+    float moveStep;
+    float deltaTime;
+    QTimer* timer;
 
     Points m_points;
     QOpenGLVertexArrayObject m_vao;

@@ -5,13 +5,13 @@ GravityManager* GravityManager::instance = nullptr;
 GravityManager::GravityManager()
 {
     barycenters.resize(1);
+    gravityForce = 10;
 }
 
 void GravityManager::update(float deltaTime)
 {
     processBarycenters();
     applyGravity(deltaTime);
-    cout << deltaTime << endl;
 }
 
 void GravityManager::applyGravity(float deltaTime)

@@ -35,6 +35,7 @@ public:
 
     const QVector<Point*> getPoints() {return points;}
 
+    void updateAll(float deltaTime);
     void update(QOpenGLShaderProgram *program);
     void paintGL(QOpenGLShaderProgram *program);
 

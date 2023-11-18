@@ -14,13 +14,17 @@ Points::~Points()
 
 }
 
+void Points::updateAll(float deltaTime)
+{
+    GravityManager::Instance()->update(deltaTime);
+}
+
 void Points::update(QOpenGLShaderProgram *program)
 {
-    float deltaTime = qet.elapsed() - lastTime;
-    lastTime = qet.elapsed();
+    //float deltaTime = qet.elapsed() - lastTime;
+    //lastTime = qet.elapsed();
 
     paintGL(program);
-    GravityManager::Instance()->update(deltaTime);
 }
 
 void Points::paintGL(QOpenGLShaderProgram *program)
@@ -33,6 +37,13 @@ void Points::paintGL(QOpenGLShaderProgram *program)
     {
         glVertex3f( points[pIt]->getPosition().x() , points[pIt]->getPosition().y(), points[pIt]->getPosition().z() );
     }
+    glEnd();
+
+    glPointSize(10);
+    glColor3f(1.0,1.0,0.0);
+    glBegin(GL_POINTS);
+    QVector3D p = GravityManager::Instance()->barycenter();
+    glVertex3f( p.x() , p.y(), p.z() );
     glEnd();
 }
 
