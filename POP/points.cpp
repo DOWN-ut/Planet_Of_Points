@@ -17,6 +17,8 @@ Points::~Points()
 void Points::updateAll(float deltaTime)
 {
     GravityManager::Instance()->update(deltaTime);
+    cout << points[0]->getPosition().x() << " " << points[0]->getPosition().y() << " " << points[0]->getPosition().z() << " " << endl;
+
 }
 
 void Points::update(QOpenGLShaderProgram *program)
@@ -31,6 +33,7 @@ void Points::paintGL(QOpenGLShaderProgram *program)
 {
     glPointSize(2);
     glColor3f(0.8,0.8,1);
+
 
     glBegin(GL_POINTS);
     for(unsigned int pIt = 0 ; pIt < points.size() ; ++pIt)

@@ -5,7 +5,7 @@ GravityManager* GravityManager::instance = nullptr;
 GravityManager::GravityManager()
 {
     barycenters.resize(1);
-    gravityForce = 10;
+    gravityForce = 0.01;
 }
 
 void GravityManager::update(float deltaTime)
@@ -16,13 +16,16 @@ void GravityManager::update(float deltaTime)
 
 void GravityManager::applyGravity(float deltaTime)
 {
-    const QVector<Point*> points =  Points::Instance()->getPoints();
+    QVector<Point*> &points =  Points::Instance()->getPoints();
+
+    cout << points[0]->getPosition().x() << " " << points[0]->getPosition().y() << " " << points[0]->getPosition().z() << " " << endl;
 
     for(Point* p : points)
     {
         QVector3D v = barycenters[0] - p->getPosition();
         v.normalize();
-        p->applyForce(v*gravityForce,deltaTime);
+        QVector3D f = gravityForce * v;
+        p->applyForce(f,deltaTime);
     }
 }
 

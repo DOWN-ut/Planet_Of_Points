@@ -2,6 +2,7 @@
 #define POINTS_H
 
 #include "gravitymanager.h"
+
 #include <QVector3D>
 #include <qopengl.h>
 #include <QVector>
@@ -10,6 +11,9 @@
 #include <QOpenGLShaderProgram>
 #include "point.h"
 #include <QElapsedTimer>
+
+#include <iostream>
+using namespace std;
 
 class Points
 { 
@@ -33,7 +37,7 @@ public:
 
     int pointsCount(){return points.size();}
 
-    const QVector<Point*> getPoints() {return points;}
+    QVector<Point*> & getPoints() {return points;}
 
     void updateAll(float deltaTime);
     void update(QOpenGLShaderProgram *program);
@@ -46,6 +50,7 @@ public:
         if(instance == nullptr)
         {
             instance = new Points();
+            cout << "Creating new Points singleton" << endl;
         }
         return instance;
     }

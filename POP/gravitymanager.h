@@ -3,7 +3,9 @@
 
 #include <QVector3D>
 #include <QVector>
+#ifndef POINTS_H
 #include "points.h"
+#endif
 #include <iostream>
 
 using namespace std;
