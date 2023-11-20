@@ -117,6 +117,7 @@ private:
     float moveStep;
     float deltaTime;
     QTimer* timer;
+    float timeScale;  bool paused;
 
     Points m_points;
     QOpenGLVertexArrayObject m_vao;

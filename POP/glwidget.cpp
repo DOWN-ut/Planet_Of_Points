@@ -67,6 +67,7 @@ GLWidget::GLWidget(QWidget *parent)
       m_xTranslation(0),
       m_yTranslation(0),
       m_zTranslation(0),
+      timeScale(1), paused(false),
       m_program(0)
 {
     m_core = QSurfaceFormat::defaultFormat().profile() == QSurfaceFormat::CoreProfile;
@@ -100,7 +101,9 @@ void GLWidget::updateAll()
     m_zPos += m_zTranslation;
     cout << "Update" << endl;
 
-    m_points.updateAll(deltaTime);
+    m_points.update(deltaTime);
+
+    timer->setInterval(deltaTime * timeScale);
 
     update();
 }
@@ -166,6 +169,7 @@ void GLWidget::keyPressEvent(QKeyEvent *event)
     case  Qt::Key_D : m_xTranslation = -moveStep * deltaTime; break;
     case  Qt::Key_Space : m_yTranslation = moveStep * deltaTime; break;
     case  Qt::Key_Shift : m_yTranslation = -moveStep * deltaTime; break;
+    case Qt::Key_Enter: paused = !paused; if(paused) { timer->stop(); } else{timer->start();} break;
     }
 }
 
@@ -207,6 +211,8 @@ void GLWidget::initializeGL()
     initializeOpenGLFunctions();
     glClearColor(0, 0, 0, m_transparent ? 0 : 1);
 
+    glEnable(GL_COLOR_MATERIAL);
+
     m_program = new QOpenGLShaderProgram;
     // Compile vertex shader
     if (!m_program->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/vshader.glsl"))
@@ -230,6 +236,8 @@ void GLWidget::initializeGL()
     m_mvp_matrix_loc = m_program->uniformLocation("mvp_matrix");
     m_normal_matrix_loc = m_program->uniformLocation("normal_matrix");
     m_light_pos_loc = m_program->uniformLocation("light_position");
+
+    m_points.initGL(m_program);
 
     // Create a vertex array object. In OpenGL ES 2.0 and OpenGL 2.x
     // implementations this is optional and support may not be present
@@ -260,7 +268,7 @@ void GLWidget::initializeGL()
     m_view.translate(0, 0, -1);
 
     // Light position is fixed.
-    m_program->setUniformValue(m_light_pos_loc, QVector3D(0, 0, 70));
+    //m_program->setUniformValue(m_light_pos_loc, QVector3D(0, 0, 70));
 
     m_program->release();
 }
@@ -303,7 +311,7 @@ void GLWidget::paintGL()
 
     //glDrawArrays(GL_TRIANGLES, 0, m_logo.vertexCount());
 
-    m_points.update(m_program);
+    m_points.paintGL(m_program);
 
     m_program->release();
 }

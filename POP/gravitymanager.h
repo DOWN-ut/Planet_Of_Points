@@ -7,6 +7,7 @@
 #include "points.h"
 #endif
 #include <iostream>
+#include <vector>
 
 using namespace std;
 

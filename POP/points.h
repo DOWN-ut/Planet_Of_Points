@@ -11,6 +11,7 @@
 #include <QOpenGLShaderProgram>
 #include "point.h"
 #include <QElapsedTimer>
+#include <vector>
 
 #include <iostream>
 using namespace std;
@@ -18,14 +19,14 @@ using namespace std;
 class Points
 { 
 private:
-    QVector<Point*> points;
-    QElapsedTimer qet;
-    qint64 lastTime;
+    QVector<Point> points;
 
     void createPoints(QVector3D center, QVector3D range, int count);
 
     void setupVertices();
     void setupTriangles();
+
+    int color_location;
 
     static Points* instance;
 
@@ -37,21 +38,24 @@ public:
 
     int pointsCount(){return points.size();}
 
-    QVector<Point*> & getPoints() {return points;}
+    QVector<Point> & getPoints() {return points;}
 
-    void updateAll(float deltaTime);
-    void update(QOpenGLShaderProgram *program);
+    void initGL(QOpenGLShaderProgram *program);
+
+    void setDrawColor(QOpenGLShaderProgram* program, QVector3D color){ program->setUniformValue(color_location, color);}
+
+    void update(float deltaTime);
     void paintGL(QOpenGLShaderProgram *program);
 
     void initBuffer(QOpenGLFunctions* context);
 
     static Points* Instance()
     {
-        if(instance == nullptr)
-        {
-            instance = new Points();
-            cout << "Creating new Points singleton" << endl;
-        }
+        //if(instance == nullptr)
+        //{
+        //    instance = new Points();
+        //    cout << "Creating new Points singleton" << endl;
+        //}
         return instance;
     }
 };
