@@ -5,7 +5,6 @@ GravityManager* GravityManager::instance = nullptr;
 GravityManager::GravityManager()
 {
     barycenters.resize(1);
-    gravityForce = 0.01;
 }
 
 void GravityManager::update(float deltaTime)
@@ -23,7 +22,7 @@ void GravityManager::applyGravity(float deltaTime)
     for(unsigned int i = 0; i < points.size();i++)
     {
         QVector3D v = barycenters[0] - points[i].getPosition();
-        float d = v.lengthSquared();
+        float d = max(v.lengthSquared(),0.1f);
         v.normalize();
         QVector3D f = (gravityForce * v) / d;
         points[i].applyForce(f,deltaTime);

@@ -16,7 +16,7 @@ class GravityManager
 private:
     QVector<QVector3D> barycenters;
     static GravityManager* instance;
-    float gravityForce;
+    float gravityForce = 0.1f;
 
 public:
     GravityManager();

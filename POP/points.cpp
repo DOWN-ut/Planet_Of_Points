@@ -4,7 +4,7 @@ Points* Points::instance = nullptr;
 
 Points::Points()
 {
-    createPoints(QVector3D(0,0,10),QVector3D(6,6,6),1000);
+    createPoints(QVector3D(0,0,10),QVector3D(6,6,6),10000);
 
     Points::instance = this;
 }
@@ -32,16 +32,17 @@ void Points::initGL(QOpenGLShaderProgram *program)
 
 void Points::paintGL(QOpenGLShaderProgram *program)
 {
-    glPointSize(2);
 
-    setDrawColor(program,QVector3D(1, 1, 1));
-
-    glBegin(GL_POINTS);
     for(unsigned int pIt = 0 ; pIt < points.size() ; ++pIt)
     {
+        glPointSize(points[pIt].getSize() * baseSize);
+        setDrawColor(program, points[pIt].getColor());
+
+        glBegin(GL_POINTS);
         glVertex3f( points[pIt].getPosition().x() , points[pIt].getPosition().y(), points[pIt].getPosition().z() );
+        glEnd();
     }
-    glEnd();
+
 
     glPointSize(10);
 
@@ -58,13 +59,17 @@ void Points::createPoints(QVector3D center, QVector3D range, int count)
     srand(time(NULL));
     for(int i = 0; i < count; i++)
     {
-        float x = (((rand() / (float)RAND_MAX) * 2) - 1) * range.x();
-        float y = (((rand() / (float)RAND_MAX) * 2) - 1) * range.y();
-        float z = (((rand() / (float)RAND_MAX) * 2) - 1) * range.z();
+        float x = (((rand() / (float)RAND_MAX) * 2) - 1) ;
+        float y = (((rand() / (float)RAND_MAX) * 2) - 1);
+        float z = (((rand() / (float)RAND_MAX) * 2) - 1) ;
         QVector3D v = QVector3D(x,y,z);
         v.normalize();
+        v = QVector3D(v.x() * range.x(),v.y() * range.y(),v.z() * range.z());
 
-        Point p = Point(QVector3D(center.x() + v.x(), center.y() + v.y(), center.z() + v.z()));
+        QVector3D pos = QVector3D(center.x() + v.x(), center.y() + v.y(), center.z() + v.z());
+        Element e = (Element)(int)((rand() / (float)RAND_MAX) * 3);
+        Point p = Point(pos,e);
+
         points.push_back(p);
     }
 

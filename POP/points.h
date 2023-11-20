@@ -28,6 +28,8 @@ private:
 
     int color_location;
 
+    const float baseSize = 2;
+
     static Points* instance;
 
 public:
