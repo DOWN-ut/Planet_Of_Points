@@ -1,4 +1,5 @@
 #include "cell.h"
+#include <iostream>
 
 Cell::Cell()
 {      
@@ -20,6 +21,26 @@ Cell::Cell(int x, int y, int z, float pressure, float temperature){
     this->temperature = temperature;
 }
 
+void Cell::deletePoint(int id){
+    for(unsigned long int i = 0; i < NBPOINTS; i++){
+        if(id == this->points[i]){
+            this->points[i] = -1;
+            break;
+        }
+    }
+
+    std::cerr<<"ERROR: try to delet a point that does not exist"<<std::endl;
+}
+
+int Cell::addPoint(int id){
+    for(unsigned long int i = 0; i < NBPOINTS; i++){
+        if(id == -1){
+            this->points[i] = id;
+            return i;
+        }
+    }
+    return -1;
+}
 
 int Cell::getX(){
     return this->x;
