@@ -17,9 +17,23 @@ public:
     Grid();
     Grid(float size,int resolution);
 
+    bool isInside(QVector3D pos)
+    {
+        QVector3D v = cellId(pos);
+        return v.x() >= 0 && v.x() < resolution && v.y() >= 0 && v.y() < resolution && v.z() >= 0 && v.z() < resolution;
+    }
+
     int getId(int x, int y, int z)
     {
         return x + (y*resolution) + (z*resolution*resolution);
+    }
+    QVector3D cellId(QVector3D pos)
+    {
+        return QVector3D(
+                    (int)(((pos.x() + (size*.5f)/(size)))*resolution),
+                    (int)(((pos.y() + (size*.5f)/(size)))*resolution),
+                    (int)(((pos.z() + (size*.5f)/(size)))*resolution)
+                    );
     }
     Cell getCell(int x, int y, int z)
     {
@@ -27,7 +41,8 @@ public:
     }
     Cell getCell(QVector3D pos)
     {
-        return getCell((int)pos.x(),(int)pos.y(),(int)pos.z());
+        QVector3D v = cellId(pos);
+        return getCell((int)v.x(),(int)v.y(),(int)v.z());
     }
 };
 

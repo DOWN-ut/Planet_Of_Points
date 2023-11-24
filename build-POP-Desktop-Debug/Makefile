@@ -50,7 +50,9 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../POP/gravitymanager.cpp \
+SOURCES       = ../POP/cell.cpp \
+		../POP/gravitymanager.cpp \
+		../POP/grid.cpp \
 		../POP/main.cpp \
 		../POP/mainwindow.cpp \
 		../POP/point.cpp \
@@ -60,7 +62,9 @@ SOURCES       = ../POP/gravitymanager.cpp \
 		moc_mainwindow.cpp \
 		moc_window.cpp \
 		moc_glwidget.cpp
-OBJECTS       = gravitymanager.o \
+OBJECTS       = cell.o \
+		gravitymanager.o \
+		grid.o \
 		main.o \
 		mainwindow.o \
 		point.o \
@@ -249,12 +253,16 @@ DIST          = /net/apps/anaconda3/mkspecs/features/spec_pre.prf \
 		/net/apps/anaconda3/mkspecs/features/exceptions.prf \
 		/net/apps/anaconda3/mkspecs/features/yacc.prf \
 		/net/apps/anaconda3/mkspecs/features/lex.prf \
-		../POP/POP.pro ../POP/gravitymanager.h \
+		../POP/POP.pro ../POP/cell.h \
+		../POP/gravitymanager.h \
+		../POP/grid.h \
 		../POP/mainwindow.h \
 		../POP/point.h \
 		../POP/points.h \
 		../POP/window.h \
-		../POP/glwidget.h ../POP/gravitymanager.cpp \
+		../POP/glwidget.h ../POP/cell.cpp \
+		../POP/gravitymanager.cpp \
+		../POP/grid.cpp \
 		../POP/main.cpp \
 		../POP/mainwindow.cpp \
 		../POP/point.cpp \
@@ -655,8 +663,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../POP/shaders.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /net/apps/anaconda3/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../POP/gravitymanager.h ../POP/mainwindow.h ../POP/point.h ../POP/points.h ../POP/window.h ../POP/glwidget.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../POP/gravitymanager.cpp ../POP/main.cpp ../POP/mainwindow.cpp ../POP/point.cpp ../POP/points.cpp ../POP/window.cpp ../POP/glwidget.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../POP/cell.h ../POP/gravitymanager.h ../POP/grid.h ../POP/mainwindow.h ../POP/point.h ../POP/points.h ../POP/window.h ../POP/glwidget.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../POP/cell.cpp ../POP/gravitymanager.cpp ../POP/grid.cpp ../POP/main.cpp ../POP/mainwindow.cpp ../POP/point.cpp ../POP/points.cpp ../POP/window.cpp ../POP/glwidget.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../POP/mainwindow.ui $(DISTDIR)/
 	$(COPY_FILE) --parents POP_en_GB.ts $(DISTDIR)/
 
@@ -1074,6 +1082,9 @@ compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_heade
 
 ####### Compile
 
+cell.o: ../POP/cell.cpp ../POP/cell.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o cell.o ../POP/cell.cpp
+
 gravitymanager.o: ../POP/gravitymanager.cpp ../POP/gravitymanager.h \
 		/net/apps/anaconda3/include/qt/QtGui/QVector3D \
 		/net/apps/anaconda3/include/qt/QtGui/qvector3d.h \
@@ -1170,6 +1181,49 @@ gravitymanager.o: ../POP/gravitymanager.cpp ../POP/gravitymanager.h \
 		/net/apps/anaconda3/include/qt/QtCore/QElapsedTimer \
 		/net/apps/anaconda3/include/qt/QtCore/qelapsedtimer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o gravitymanager.o ../POP/gravitymanager.cpp
+
+grid.o: ../POP/grid.cpp ../POP/grid.h \
+		../POP/cell.h \
+		/net/apps/anaconda3/include/qt/QtGui/QVector3D \
+		/net/apps/anaconda3/include/qt/QtGui/qvector3d.h \
+		/net/apps/anaconda3/include/qt/QtGui/qtguiglobal.h \
+		/net/apps/anaconda3/include/qt/QtCore/qglobal.h \
+		/net/apps/anaconda3/include/qt/QtCore/qconfig-bootstrapped.h \
+		/net/apps/anaconda3/include/qt/QtCore/qconfig.h \
+		/net/apps/anaconda3/include/qt/QtCore/qtcore-config.h \
+		/net/apps/anaconda3/include/qt/QtCore/qsystemdetection.h \
+		/net/apps/anaconda3/include/qt/QtCore/qprocessordetection.h \
+		/net/apps/anaconda3/include/qt/QtCore/qcompilerdetection.h \
+		/net/apps/anaconda3/include/qt/QtCore/qtypeinfo.h \
+		/net/apps/anaconda3/include/qt/QtCore/qsysinfo.h \
+		/net/apps/anaconda3/include/qt/QtCore/qlogging.h \
+		/net/apps/anaconda3/include/qt/QtCore/qflags.h \
+		/net/apps/anaconda3/include/qt/QtCore/qatomic.h \
+		/net/apps/anaconda3/include/qt/QtCore/qbasicatomic.h \
+		/net/apps/anaconda3/include/qt/QtCore/qatomic_bootstrap.h \
+		/net/apps/anaconda3/include/qt/QtCore/qgenericatomic.h \
+		/net/apps/anaconda3/include/qt/QtCore/qatomic_cxx11.h \
+		/net/apps/anaconda3/include/qt/QtCore/qatomic_msvc.h \
+		/net/apps/anaconda3/include/qt/QtCore/qglobalstatic.h \
+		/net/apps/anaconda3/include/qt/QtCore/qmutex.h \
+		/net/apps/anaconda3/include/qt/QtCore/qnumeric.h \
+		/net/apps/anaconda3/include/qt/QtCore/qversiontagging.h \
+		/net/apps/anaconda3/include/qt/QtGui/qtgui-config.h \
+		/net/apps/anaconda3/include/qt/QtCore/qpoint.h \
+		/net/apps/anaconda3/include/qt/QtCore/qnamespace.h \
+		/net/apps/anaconda3/include/qt/QtCore/qmetatype.h \
+		/net/apps/anaconda3/include/qt/QtCore/qbytearray.h \
+		/net/apps/anaconda3/include/qt/QtCore/qrefcount.h \
+		/net/apps/anaconda3/include/qt/QtCore/qarraydata.h \
+		/net/apps/anaconda3/include/qt/QtCore/qstring.h \
+		/net/apps/anaconda3/include/qt/QtCore/qchar.h \
+		/net/apps/anaconda3/include/qt/QtCore/qstringbuilder.h \
+		/net/apps/anaconda3/include/qt/QtCore/qvarlengtharray.h \
+		/net/apps/anaconda3/include/qt/QtCore/qcontainerfwd.h \
+		/net/apps/anaconda3/include/qt/QtCore/qalgorithms.h \
+		/net/apps/anaconda3/include/qt/QtCore/qobjectdefs.h \
+		/net/apps/anaconda3/include/qt/QtCore/qobjectdefs_impl.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o grid.o ../POP/grid.cpp
 
 main.o: ../POP/main.cpp ../POP/mainwindow.h \
 		/net/apps/anaconda3/include/qt/QtWidgets/QMainWindow \
@@ -1420,13 +1474,43 @@ mainwindow.o: ../POP/mainwindow.cpp ../POP/mainwindow.h \
 		/net/apps/anaconda3/include/qt/QtWidgets/qtabwidget.h \
 		/net/apps/anaconda3/include/qt/QtGui/qicon.h \
 		ui_mainwindow.h \
-		../POP/window.h \
-		/net/apps/anaconda3/include/qt/QtWidgets/QWidget \
+		/net/apps/anaconda3/include/qt/QtCore/QVariant \
+		/net/apps/anaconda3/include/qt/QtWidgets/QAction \
+		/net/apps/anaconda3/include/qt/QtWidgets/qaction.h \
+		/net/apps/anaconda3/include/qt/QtWidgets/qactiongroup.h \
+		/net/apps/anaconda3/include/qt/QtWidgets/QApplication \
+		/net/apps/anaconda3/include/qt/QtWidgets/qapplication.h \
+		/net/apps/anaconda3/include/qt/QtCore/qcoreapplication.h \
+		/net/apps/anaconda3/include/qt/QtCore/qeventloop.h \
+		/net/apps/anaconda3/include/qt/QtWidgets/qdesktopwidget.h \
+		/net/apps/anaconda3/include/qt/QtGui/qguiapplication.h \
+		/net/apps/anaconda3/include/qt/QtGui/qinputmethod.h \
+		/net/apps/anaconda3/include/qt/QtWidgets/QButtonGroup \
+		/net/apps/anaconda3/include/qt/QtWidgets/qbuttongroup.h \
+		/net/apps/anaconda3/include/qt/QtWidgets/QHeaderView \
+		/net/apps/anaconda3/include/qt/QtWidgets/qheaderview.h \
+		/net/apps/anaconda3/include/qt/QtWidgets/qabstractitemview.h \
+		/net/apps/anaconda3/include/qt/QtWidgets/qabstractscrollarea.h \
+		/net/apps/anaconda3/include/qt/QtWidgets/qframe.h \
+		/net/apps/anaconda3/include/qt/QtCore/qabstractitemmodel.h \
+		/net/apps/anaconda3/include/qt/QtCore/qitemselectionmodel.h \
+		/net/apps/anaconda3/include/qt/QtWidgets/qabstractitemdelegate.h \
+		/net/apps/anaconda3/include/qt/QtWidgets/qstyleoption.h \
+		/net/apps/anaconda3/include/qt/QtWidgets/qabstractspinbox.h \
+		/net/apps/anaconda3/include/qt/QtGui/qvalidator.h \
+		/net/apps/anaconda3/include/qt/QtCore/qregularexpression.h \
+		/net/apps/anaconda3/include/qt/QtWidgets/qslider.h \
+		/net/apps/anaconda3/include/qt/QtWidgets/qabstractslider.h \
+		/net/apps/anaconda3/include/qt/QtWidgets/qstyle.h \
+		/net/apps/anaconda3/include/qt/QtWidgets/qtabbar.h \
+		/net/apps/anaconda3/include/qt/QtWidgets/qrubberband.h \
 		/net/apps/anaconda3/include/qt/QtWidgets/QMenuBar \
 		/net/apps/anaconda3/include/qt/QtWidgets/qmenubar.h \
 		/net/apps/anaconda3/include/qt/QtWidgets/qmenu.h \
-		/net/apps/anaconda3/include/qt/QtWidgets/qaction.h \
-		/net/apps/anaconda3/include/qt/QtWidgets/qactiongroup.h \
+		/net/apps/anaconda3/include/qt/QtWidgets/QStatusBar \
+		/net/apps/anaconda3/include/qt/QtWidgets/qstatusbar.h \
+		/net/apps/anaconda3/include/qt/QtWidgets/QWidget \
+		../POP/window.h \
 		/net/apps/anaconda3/include/qt/QtWidgets/QMenu \
 		/net/apps/anaconda3/include/qt/QtWidgets/QMessageBox \
 		/net/apps/anaconda3/include/qt/QtWidgets/qmessagebox.h \
