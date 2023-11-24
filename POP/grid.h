@@ -3,6 +3,8 @@
 
 #include "cell.h"
 #include <QVector3D>
+#include <QOpenGLShaderProgram>
+#include "glwidget.h"
 
 class Grid
 {
@@ -13,15 +15,27 @@ private:
 
     Cell* cells;
 
+    static Grid* instance;
+
 public:
     Grid();
     Grid(float size,int resolution);
+
+    void paintGL(QOpenGLShaderProgram *program);
 
     bool isInside(QVector3D v)
     {
         return v.x() >= 0 && v.x() < resolution && v.y() >= 0 && v.y() < resolution && v.z() >= 0 && v.z() < resolution;
     }
 
+    QVector3D getPosition(int x, int y, int z)
+    {
+        return QVector3D(
+                    (-size*.5f) + (size*(x/resolution)),
+                    (-size*.5f) + (size*(y/resolution)),
+                    (-size*.5f) + (size*(z/resolution))
+                    );
+    }
     int getId(int x, int y, int z)
     {
         return x + (y*resolution) + (z*resolution*resolution);
@@ -34,9 +48,13 @@ public:
                     (int)(((pos.z() + (size*.5f))/size)*resolution)
                     );
     }
+    Cell getCell(int id)
+    {
+        return cells[id];
+    }
     Cell getCell(int x, int y, int z)
     {
-        return cells[getId(x,y,z)];
+        return getCell(getId(x,y,z));
     }
     Cell getCell(QVector3D pos)
     {
@@ -44,6 +62,8 @@ public:
         if(!isInside(v)){return getCell(0,0,0);}
         return getCell((int)v.x(),(int)v.y(),(int)v.z());
     }
+
+    static Grid* Instance(){return instance;}
 };
 
 #endif // GRID_H
