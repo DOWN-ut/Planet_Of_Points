@@ -28,7 +28,14 @@ void Point::update(float deltaTime)
     int cid = Grid::Instance()->getId(cpos.x(),cpos.y(),cpos.z());
     if(cid != cellId)
     {
-        //Grid::Instance()->getCell(cellId).removePoint(this);
-        cellId = cid;
+        int tempcellArrayId = Grid::Instance()->getCell(cellId).addPoint(id);
+        if(tempcellArrayId == -1){
+            position -= velocity * deltaTime;
+        }
+        else{
+            cellArrayId = tempcellArrayId;
+            Grid::Instance()->getCell(cellId).deletePoint(id);
+            cellId = cid;
+        }
     }
 }

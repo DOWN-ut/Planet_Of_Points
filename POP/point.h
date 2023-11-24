@@ -15,7 +15,9 @@ enum Element
 class Point
 {
 protected:
+    int id;
     int cellId;
+    int cellArrayId;
 
     QVector3D position;
     float mass;
