@@ -4,7 +4,7 @@ Points* Points::instance = nullptr;
 
 Points::Points()
 {
-    createPoints(QVector3D(0,0,10),QVector3D(6,6,6),10000);
+    createPoints(QVector3D(0,0,10),QVector3D(5,5,5),QVector3D(7,7,7),10000);
 
     Points::instance = this;
 }
@@ -18,7 +18,6 @@ Points::~Points()
 void Points::update(float deltaTime)
 {
     GravityManager::Instance()->update(deltaTime);
-    //cout << points[0].getPosition().x() << " " << points[0].getPosition().y() << " " << points[0].getPosition().z() << " " << endl;
     for(unsigned int pIt = 0 ; pIt < points.size() ; ++pIt)
     {
         points[pIt].update(deltaTime);
@@ -41,7 +40,7 @@ void Points::paintGL(QOpenGLShaderProgram *program)
         glBegin(GL_POINTS);
         glVertex3f( points[pIt].getPosition().x() , points[pIt].getPosition().y(), points[pIt].getPosition().z() );
         glEnd();
-    }
+     }
 
 
     glPointSize(10);
@@ -54,7 +53,7 @@ void Points::paintGL(QOpenGLShaderProgram *program)
     glEnd();
 }
 
-void Points::createPoints(QVector3D center, QVector3D range, int count)
+void Points::createPoints(QVector3D center, QVector3D rangeMin, QVector3D rangeMax, int count)
 {
     srand(time(NULL));
     for(int i = 0; i < count; i++)
@@ -64,7 +63,12 @@ void Points::createPoints(QVector3D center, QVector3D range, int count)
         float z = (((rand() / (float)RAND_MAX) * 2) - 1) ;
         QVector3D v = QVector3D(x,y,z);
         v.normalize();
-        v = QVector3D(v.x() * range.x(),v.y() * range.y(),v.z() * range.z());
+
+        QVector3D randV = QVector3D(
+                    rangeMin.x() + ((rangeMax.x() - rangeMin.x()) * (rand() / (float)RAND_MAX)),
+                    rangeMin.y() + ((rangeMax.y() - rangeMin.y()) * (rand() / (float)RAND_MAX)),
+                    rangeMin.z() + ((rangeMax.z() - rangeMin.z()) * (rand() / (float)RAND_MAX)));
+        v = QVector3D(v.x() * randV.x(),v.y() * randV.y(),v.z() * randV.z());
 
         QVector3D pos = QVector3D(center.x() + v.x(), center.y() + v.y(), center.z() + v.z());
         Element e = (Element)(int)((rand() / (float)RAND_MAX) * 3);
@@ -74,4 +78,3 @@ void Points::createPoints(QVector3D center, QVector3D range, int count)
     }
 
 }
-

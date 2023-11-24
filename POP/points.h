@@ -21,7 +21,7 @@ class Points
 private:
     QVector<Point> points;
 
-    void createPoints(QVector3D center, QVector3D range, int count);
+    void createPoints(QVector3D center, QVector3D rangeMin, QVector3D rangeMax, int count);
 
     void setupVertices();
     void setupTriangles();
