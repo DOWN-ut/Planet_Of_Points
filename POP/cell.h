@@ -1,5 +1,3 @@
-#include "point.h"
-
 #ifndef CELL_H
 #define CELL_H
 
@@ -11,7 +9,7 @@ class Cell
         int y;
         int z;
 
-        Point points[1000];
+        int points[1000];
         float pressure;
         float temperature;
 
