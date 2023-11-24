@@ -32,6 +32,8 @@ Makefile*
 *.qm
 *.prl
 
+build-POP-Desktop-Debug/POP
+
 # Qt unit tests
 target_wrapper.*
 
