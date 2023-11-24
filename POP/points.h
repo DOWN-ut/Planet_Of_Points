@@ -10,6 +10,7 @@
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
 #include "point.h"
+#include "grid.h"
 #include "glwidget.h"
 #include <QElapsedTimer>
 #include <vector>

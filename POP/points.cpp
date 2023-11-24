@@ -51,6 +51,8 @@ void Points::paintGL(QOpenGLShaderProgram *program)
     QVector3D p = GravityManager::Instance()->barycenter();
     glVertex3f( p.x() , p.y(), p.z() );
     glEnd();
+
+    Grid::Instance()->paintGL(program);
 }
 
 void Points::createPoints(QVector3D center, QVector3D rangeMin, QVector3D rangeMax, int count)
