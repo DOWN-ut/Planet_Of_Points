@@ -8,12 +8,17 @@ Grid::Grid()
 
 }
 
-Grid::Grid(float size,int resolution)
+Grid::Grid(float _size,int _resolution)
 {
     Grid::instance = this;
 
+    cout << "Creating grid" << endl;
+
+    size = _size;
+    resolution = _resolution;
     count = resolution*resolution*resolution;
     cells = new Cell[count];
+    cout << count << "  " << resolution << endl;
 
     for(int z = 0; z < resolution; z++)
     {
@@ -26,6 +31,8 @@ Grid::Grid(float size,int resolution)
             }
         }
     }
+
+    cout << "Created grid" << endl;
 }
 
 void Grid::paintGL(QOpenGLShaderProgram *program)

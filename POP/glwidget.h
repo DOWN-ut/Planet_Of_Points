@@ -60,6 +60,7 @@
 #include "grid.h"
 #include <QKeyEvent>
 #include <QTimer>
+#include <iostream>
 
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
 
