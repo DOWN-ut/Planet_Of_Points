@@ -76,6 +76,10 @@ public:
     QSize minimumSizeHint() const override;
     QSize sizeHint() const override;
 
+    static void setDrawColor(QVector3D color){ instance->m_program->setUniformValue(instance->color_location, color);}
+
+
+
 public slots:
     //Completer : ajouter des slots pour signaler appliquer le changement de rotation
     void setXRotation(int angle);
@@ -123,6 +127,8 @@ private:
     QOpenGLVertexArrayObject m_vao;
     QOpenGLBuffer m_logoVbo;
 
+    int color_location;
+
     QOpenGLShaderProgram *m_program;
 
     int m_mvp_matrix_loc;
@@ -132,6 +138,8 @@ private:
     QMatrix4x4 m_view;
     QMatrix4x4 m_model;
     static bool m_transparent;
+
+    static GLWidget* instance;
 };
 
 #endif

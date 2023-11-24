@@ -26,7 +26,7 @@ void Points::update(float deltaTime)
 
 void Points::initGL(QOpenGLShaderProgram *program)
 {
-    color_location = program->uniformLocation("color");
+
 }
 
 void Points::paintGL(QOpenGLShaderProgram *program)
@@ -35,7 +35,7 @@ void Points::paintGL(QOpenGLShaderProgram *program)
     for(unsigned int pIt = 0 ; pIt < points.size() ; ++pIt)
     {
         glPointSize(points[pIt].getSize() * baseSize);
-        setDrawColor(program, points[pIt].getColor());
+        GLWidget::setDrawColor(points[pIt].getColor());
 
         glBegin(GL_POINTS);
         glVertex3f( points[pIt].getPosition().x() , points[pIt].getPosition().y(), points[pIt].getPosition().z() );
@@ -45,7 +45,7 @@ void Points::paintGL(QOpenGLShaderProgram *program)
 
     glPointSize(10);
 
-    setDrawColor(program,QVector3D(1, 1, 0));
+    GLWidget::setDrawColor(QVector3D(1, 1, 0));
 
     glBegin(GL_POINTS);
     QVector3D p = GravityManager::Instance()->barycenter();

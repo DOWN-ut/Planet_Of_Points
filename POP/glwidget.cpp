@@ -87,6 +87,8 @@ GLWidget::GLWidget(QWidget *parent)
     timer = new QTimer(this);
     connect(timer,&QTimer::timeout,this,&GLWidget::updateAll);
     timer->start(deltaTime);
+
+    instance = this;
 }
 
 GLWidget::~GLWidget()
@@ -212,6 +214,7 @@ void GLWidget::initializeGL()
     glClearColor(0, 0, 0, m_transparent ? 0 : 1);
 
     glEnable(GL_COLOR_MATERIAL);
+    color_location = m_program->uniformLocation("color");
 
     m_program = new QOpenGLShaderProgram;
     // Compile vertex shader

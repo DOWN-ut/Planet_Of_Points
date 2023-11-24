@@ -22,4 +22,12 @@ void Point::update(float deltaTime)
     position += velocity * deltaTime;
 
     temperature = 1;
+
+    QVector3D cpos = Grid::Instance()->cellId(position);
+    int cid = Grid::Instance()->getId(cpos.x(),cpos.y(),cpos.z());
+    if(cid != cellId)
+    {
+        //Grid::Instance()->getCell(cellId).removePoint(this);
+        cellId = cid;
+    }
 }

@@ -2,6 +2,8 @@
 #define POINT_H
 
 #include <QVector3D>
+#include "grid.h"
+#include "cell.h"
 
 enum Element
 {
@@ -11,6 +13,8 @@ enum Element
 class Point
 {
 protected:
+    int cellId;
+
     QVector3D position;
     float mass;
 

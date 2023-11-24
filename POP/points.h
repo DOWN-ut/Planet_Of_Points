@@ -10,6 +10,7 @@
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
 #include "point.h"
+#include "glwidget.h"
 #include <QElapsedTimer>
 #include <vector>
 
@@ -26,8 +27,6 @@ private:
     void setupVertices();
     void setupTriangles();
 
-    int color_location;
-
     const float baseSize = 2;
 
     static Points* instance;
@@ -43,8 +42,6 @@ public:
     QVector<Point> & getPoints() {return points;}
 
     void initGL(QOpenGLShaderProgram *program);
-
-    void setDrawColor(QOpenGLShaderProgram* program, QVector3D color){ program->setUniformValue(color_location, color);}
 
     void update(float deltaTime);
     void paintGL(QOpenGLShaderProgram *program);
