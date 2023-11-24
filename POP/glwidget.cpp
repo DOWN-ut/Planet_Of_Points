@@ -54,6 +54,8 @@
 #include <QCoreApplication>
 #include <math.h>
 
+GLWidget* GLWidget::instance = nullptr;
+
 bool GLWidget::m_transparent = false;
 
 GLWidget::GLWidget(QWidget *parent)
@@ -87,6 +89,8 @@ GLWidget::GLWidget(QWidget *parent)
     timer = new QTimer(this);
     connect(timer,&QTimer::timeout,this,&GLWidget::updateAll);
     timer->start(deltaTime);
+
+    grid = Grid(30,10);
 
     instance = this;
 }

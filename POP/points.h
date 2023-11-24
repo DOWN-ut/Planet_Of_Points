@@ -9,9 +9,12 @@
 #include <QOpenGLBuffer>
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
+
 #include "point.h"
-#include "grid.h"
-#include "glwidget.h"
+
+class Grid;
+class GLWidget;
+
 #include <QElapsedTimer>
 #include <vector>
 
@@ -51,11 +54,6 @@ public:
 
     static Points* Instance()
     {
-        //if(instance == nullptr)
-        //{
-        //    instance = new Points();
-        //    cout << "Creating new Points singleton" << endl;
-        //}
         return instance;
     }
 };

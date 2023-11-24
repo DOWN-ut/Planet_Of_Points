@@ -2,7 +2,9 @@
 #define POINT_H
 
 #include <QVector3D>
-#include "grid.h"
+class Grid;
+class GLWidget;
+
 #include "cell.h"
 
 enum Element

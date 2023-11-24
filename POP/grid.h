@@ -4,15 +4,16 @@
 #include "cell.h"
 #include <QVector3D>
 #include <QOpenGLShaderProgram>
-#include "glwidget.h"
+//#include "glwidget.h"
+class GLWidget;
 
 class Grid
 {
 private:
     float size;
     int resolution;
-    int count;
 
+    int count;
     Cell* cells;
 
     static Grid* instance;
@@ -63,7 +64,7 @@ public:
         return getCell((int)v.x(),(int)v.y(),(int)v.z());
     }
 
-    static Grid* Instance(){return instance;}
+    static Grid* Instance(){return Grid::instance;}
 };
 
 #endif // GRID_H

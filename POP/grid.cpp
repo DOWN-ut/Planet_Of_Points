@@ -1,4 +1,7 @@
 #include "grid.h"
+#include "glwidget.h"
+
+Grid* Grid::instance = nullptr;
 
 Grid::Grid()
 {
@@ -7,7 +10,7 @@ Grid::Grid()
 
 Grid::Grid(float size,int resolution)
 {
-    instance = this;
+    Grid::instance = this;
 
     count = resolution*resolution*resolution;
     cells = new Cell[count];
@@ -18,7 +21,7 @@ Grid::Grid(float size,int resolution)
         {
             for(int x = 0; x < resolution; x++)
             {
-                Cell cell = Cell(); // x y z
+                Cell cell = Cell(x,y,z); // x y z
                 cells[getId(x,y,z)] = cell;
             }
         }

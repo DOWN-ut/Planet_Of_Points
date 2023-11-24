@@ -57,6 +57,7 @@
 #include <QOpenGLBuffer>
 #include <QMatrix4x4>
 #include "points.h"
+#include "grid.h"
 #include <QKeyEvent>
 #include <QTimer>
 
@@ -124,6 +125,7 @@ private:
     float timeScale;  bool paused;
 
     Points m_points;
+    Grid grid;
     QOpenGLVertexArrayObject m_vao;
     QOpenGLBuffer m_logoVbo;
 

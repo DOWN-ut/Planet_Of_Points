@@ -1,4 +1,6 @@
 #include "points.h"
+#include "glwidget.h"
+#include "grid.h"
 
 Points* Points::instance = nullptr;
 

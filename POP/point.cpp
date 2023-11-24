@@ -1,4 +1,5 @@
 #include "point.h"
+#include "grid.h"
 
 Point::Point()
 {
