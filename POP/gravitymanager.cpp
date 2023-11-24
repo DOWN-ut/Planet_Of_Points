@@ -11,6 +11,8 @@ void GravityManager::update(float deltaTime)
 {
     processBarycenters();
     applyGravity(deltaTime);
+    processAverageSpeed();
+    applyVelocity();
 }
 
 void GravityManager::applyGravity(float deltaTime)
@@ -27,6 +29,30 @@ void GravityManager::applyGravity(float deltaTime)
         QVector3D f = (gravityForce * v) / d;
         points[i].applyForce(f,deltaTime);
     }
+}
+
+void GravityManager::applyVelocity()
+{
+    QVector<Point> &points =  Points::Instance()->getPoints();
+
+    for(unsigned int i = 0; i < points.size();i++)
+    {
+        points[i].addVelocity(-averageSpeed);
+    }
+}
+
+void GravityManager::processAverageSpeed()
+{
+    averageSpeed = QVector3D(0,0,0);
+
+    const QVector<Point> points =  Points::Instance()->getPoints();
+
+    for(Point p : points)
+    {
+        averageSpeed += p.getVelocity();
+    }
+
+    averageSpeed /= points.size();
 }
 
 void GravityManager::processBarycenters()

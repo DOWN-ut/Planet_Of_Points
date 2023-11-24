@@ -4,7 +4,7 @@ Points* Points::instance = nullptr;
 
 Points::Points()
 {
-    createPoints(QVector3D(0,0,10),QVector3D(5,5,5),QVector3D(7,7,7),10000);
+    createPoints(QVector3D(0,0,0),QVector3D(5,5,5),QVector3D(7,7,7),10000);
 
     Points::instance = this;
 }

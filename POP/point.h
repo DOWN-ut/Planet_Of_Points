@@ -42,6 +42,9 @@ public:
     float getSize(){return elementSizes[(int)element] * temperature;}
 
     QVector3D getPosition(){return position;}
+    QVector3D getVelocity(){return velocity;}
+
+    void addVelocity(QVector3D v){velocity += v;}
 
 };
 

@@ -15,6 +15,7 @@ class GravityManager
 {
 private:
     QVector<QVector3D> barycenters;
+    QVector3D averageSpeed;
     static GravityManager* instance;
     float gravityForce = 0.1f;
 
@@ -24,7 +25,11 @@ public:
     const QVector3D barycenter(int i = 0){ return barycenters.at(i);}
 
     void update(float deltaTime);
+
     void processBarycenters();
+    void processAverageSpeed();
+
+    void applyVelocity();
     void applyGravity(float deltaTime);
 
     static GravityManager* Instance()

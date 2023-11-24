@@ -9,7 +9,9 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    cell.cpp \
     gravitymanager.cpp \
+    grid.cpp \
     main.cpp \
     mainwindow.cpp \
     point.cpp \
@@ -18,7 +20,9 @@ SOURCES += \
     glwidget.cpp
 
 HEADERS += \
+    cell.h \
     gravitymanager.h \
+    grid.h \
     mainwindow.h \
     point.h \
     points.h \
