@@ -10,6 +10,7 @@ class Cell
         int y;
         int z;
 
+        int nbPoints;
         int points[NBPOINTS]{-1};
         float pressure;
         float temperature;
@@ -21,9 +22,10 @@ class Cell
 
         void deletePoint(int id);
         int addPoint(int id);
-        int calcTemp();
+        float calcTemp();
+        float calcPressure();
 
-
+        int getNbPoints();
         int getX();
         int getY();
         int getZ();
