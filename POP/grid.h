@@ -35,9 +35,9 @@ public:
     QVector3D getPosition(int x, int y, int z)
     {
         return QVector3D(
-                    (-size*.5f) + (size*(x/resolution)),
-                    (-size*.5f) + (size*(y/resolution)),
-                    (-size*.5f) + (size*(z/resolution))
+                    (-size*.5f) + (size*(x/(float)resolution)),
+                    (-size*.5f) + (size*(y/(float)resolution)),
+                    (-size*.5f) + (size*(z/(float)resolution))
                     );
     }
     int getId(int x, int y, int z)

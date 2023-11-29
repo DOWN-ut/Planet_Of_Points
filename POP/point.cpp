@@ -6,7 +6,7 @@ Point::Point()
 
 }
 
-Point::Point(QVector3D p,Element e)
+Point::Point(QVector3D p,Element e) : cellId(-1)
 {
     position = p;
     element = e;
@@ -36,9 +36,13 @@ void Point::update(float deltaTime)
 
     QVector3D cpos = Grid::Instance()->cellId(position);
     int cid = Grid::Instance()->getId(cpos.x(),cpos.y(),cpos.z());
-    if(cid != cellId)
+    if(cellId == -1)
     {
-        int tempcellArrayId = Grid::Instance()->getCell(cellId).addPoint(id);
+        Grid::Instance()->getCell(cid).addPoint(id);
+    }
+    else if(cid != cellId)
+    {
+        int tempcellArrayId = Grid::Instance()->getCell(cid).addPoint(id);
         if(tempcellArrayId == -1){
             position -= velocity * deltaTime;
         }

@@ -35,15 +35,17 @@ Grid::Grid(float _size,int _resolution)
 
 void Grid::paintGL(QOpenGLShaderProgram *program)
 {
-
     for(int z = 0; z < resolution; z++)
     {
         for(int y = 0; y < resolution; y++)
         {
             for(int x = 0; x < resolution; x++)
             {
-                glPointSize(5);//getCell(x,y,z).getDisplaySize());
-                GLWidget::setDrawColor(QVector3D(1,1,1));//points[pIt].getColor());
+                float gps = size/(float)resolution;
+                glPointSize(gps * 10);//getCell(x,y,z).getDisplaySize());
+
+                float cc = getCell(x,y,z).getNbPoints() / 100f;
+                GLWidget::setDrawColor(QVector3D(1,1-cc,1-cc));//points[pIt].getColor());
 
                 glBegin(GL_POINTS);
                 QVector3D v = getPosition(x,y,z);
