@@ -110,7 +110,6 @@ void GLWidget::updateAll()
 
     m_points.update(deltaTime);
 
-    cout << "updated points" << endl;
     timer->setInterval(deltaTime * timeScale);
 
     update();

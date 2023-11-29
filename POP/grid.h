@@ -45,12 +45,7 @@ public:
         return x + (y*resolution) + (z*resolution*resolution);
     }
     QVector3D cellId(QVector3D pos)
-    {
-        cout << pos.x() << "   " << size  << " " << resolution << endl;
-        cout << (pos.x()  + (size*.5f)) << endl;
-        cout << ((pos.x() + (size*.5f))/size) << endl;
-        cout << (((pos.x() + (size*.5f))/size)*resolution) << endl;
-
+    {     
         return QVector3D(
                     (int)(((pos.x() + (size*.5f))/size)*resolution),
                     (int)(((pos.y() + (size*.5f))/size)*resolution),
