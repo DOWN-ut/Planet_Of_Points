@@ -80,7 +80,7 @@ float Cell::calcPressure(){
     return sum/nbPointsInCell;
 }
 
-int Cell:getNbPoints(){
+int Cell::getNbPoints(){
     return this->nbPoints;
 }
 int Cell::getX(){

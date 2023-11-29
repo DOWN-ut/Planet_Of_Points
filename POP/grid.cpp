@@ -44,7 +44,7 @@ void Grid::paintGL(QOpenGLShaderProgram *program)
                 float gps = size/(float)resolution;
                 glPointSize(gps * 10);//getCell(x,y,z).getDisplaySize());
 
-                float cc = getCell(x,y,z).getNbPoints() / 100f;
+                float cc = getCell(x,y,z).getNbPoints() / 100.0f;
                 GLWidget::setDrawColor(QVector3D(1,1-cc,1-cc));//points[pIt].getColor());
 
                 glBegin(GL_POINTS);
