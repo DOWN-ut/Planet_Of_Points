@@ -54,6 +54,9 @@ public:
 
     void addVelocity(QVector3D v){velocity += v;}
 
+    float getMass();
+    float getTemp();
+
 };
 
 #endif // POINT_H

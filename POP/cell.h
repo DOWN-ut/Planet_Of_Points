@@ -21,6 +21,8 @@ class Cell
 
         void deletePoint(int id);
         int addPoint(int id);
+        int calcTemp();
+
 
         int getX();
         int getY();
