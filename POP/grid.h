@@ -4,6 +4,9 @@
 #include "cell.h"
 #include <QVector3D>
 #include <QOpenGLShaderProgram>
+#include <iostream>
+using namespace std;
+
 //#include "glwidget.h"
 class GLWidget;
 
@@ -43,6 +46,11 @@ public:
     }
     QVector3D cellId(QVector3D pos)
     {
+        cout << pos.x() << "   " << size  << " " << resolution << endl;
+        cout << (pos.x()  + (size*.5f)) << endl;
+        cout << ((pos.x() + (size*.5f))/size) << endl;
+        cout << (((pos.x() + (size*.5f))/size)*resolution) << endl;
+
         return QVector3D(
                     (int)(((pos.x() + (size*.5f))/size)*resolution),
                     (int)(((pos.y() + (size*.5f))/size)*resolution),

@@ -78,7 +78,7 @@ public:
     QSize minimumSizeHint() const override;
     QSize sizeHint() const override;
 
-    static void setDrawColor(QVector3D color){ instance->m_program->setUniformValue(instance->color_location, color);}
+    static void setDrawColor(QVector3D color);
 
 
 

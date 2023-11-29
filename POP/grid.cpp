@@ -3,22 +3,20 @@
 
 Grid* Grid::instance = nullptr;
 
-Grid::Grid()
+/*Grid::Grid()
 {
-
-}
+    cout << "ininin" <<endl;
+}*/
 
 Grid::Grid(float _size,int _resolution)
 {
     Grid::instance = this;
 
-    cout << "Creating grid" << endl;
-
     size = _size;
     resolution = _resolution;
     count = resolution*resolution*resolution;
     cells = new Cell[count];
-    cout << count << "  " << resolution << endl;
+    cout << "Creating grid (" << size << "  " << count << "  " << resolution << ")" << endl;
 
     for(int z = 0; z < resolution; z++)
     {
@@ -32,7 +30,7 @@ Grid::Grid(float _size,int _resolution)
         }
     }
 
-    cout << "Created grid" << endl;
+    cout << "  > Created grid" << endl;
 }
 
 void Grid::paintGL(QOpenGLShaderProgram *program)

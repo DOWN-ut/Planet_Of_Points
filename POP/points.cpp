@@ -6,7 +6,10 @@ Points* Points::instance = nullptr;
 
 Points::Points()
 {
-    createPoints(QVector3D(0,0,0),QVector3D(5,5,5),QVector3D(7,7,7),10000);
+    int _c = 10000;
+
+    cout << "Creating " << _c << " points" << endl;
+    createPoints(QVector3D(0,0,0),QVector3D(5,5,5),QVector3D(7,7,7),_c);
 
     Points::instance = this;
 }
@@ -53,8 +56,6 @@ void Points::paintGL(QOpenGLShaderProgram *program)
     QVector3D p = GravityManager::Instance()->barycenter();
     glVertex3f( p.x() , p.y(), p.z() );
     glEnd();
-
-    Grid::Instance()->paintGL(program);
 }
 
 void Points::createPoints(QVector3D center, QVector3D rangeMin, QVector3D rangeMax, int count)

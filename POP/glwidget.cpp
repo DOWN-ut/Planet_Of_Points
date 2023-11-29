@@ -70,6 +70,9 @@ GLWidget::GLWidget(QWidget *parent)
       m_yTranslation(0),
       m_zTranslation(0),
       timeScale(1), paused(false),
+
+      grid(Grid(30,10)),
+
       m_program(0)
 {
     m_core = QSurfaceFormat::defaultFormat().profile() == QSurfaceFormat::CoreProfile;
@@ -90,8 +93,6 @@ GLWidget::GLWidget(QWidget *parent)
     connect(timer,&QTimer::timeout,this,&GLWidget::updateAll);
     timer->start(deltaTime);
 
-    grid = Grid(30,10);
-
     instance = this;
 }
 
@@ -109,6 +110,7 @@ void GLWidget::updateAll()
 
     m_points.update(deltaTime);
 
+    cout << "updated points" << endl;
     timer->setInterval(deltaTime * timeScale);
 
     update();
@@ -203,6 +205,11 @@ void GLWidget::cleanup()
     doneCurrent();
 }
 
+void GLWidget::setDrawColor(QVector3D color)
+{
+    instance->m_program->setUniformValue(instance->color_location, color);
+}
+
 void GLWidget::initializeGL()
 {
     // In this example the widget's corresponding top-level window can change
@@ -212,13 +219,13 @@ void GLWidget::initializeGL()
     // aboutToBeDestroyed() signal, instead of the destructor. The emission of
     // the signal will be followed by an invocation of initializeGL() where we
     // can recreate all resources.
+    cout << "Initialising GL" << endl;
     connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &GLWidget::cleanup);
 
     initializeOpenGLFunctions();
     glClearColor(0, 0, 0, m_transparent ? 0 : 1);
 
     glEnable(GL_COLOR_MATERIAL);
-    color_location = m_program->uniformLocation("color");
 
     m_program = new QOpenGLShaderProgram;
     // Compile vertex shader
@@ -270,6 +277,8 @@ void GLWidget::initializeGL()
     // Store the vertex attribute bindings for the program.
     setupVertexAttribs();
 
+    color_location = m_program->uniformLocation("color");
+
     // Our camera never changes in this example.
     m_view.setToIdentity();
     m_view.translate(0, 0, -1);
@@ -278,6 +287,8 @@ void GLWidget::initializeGL()
     //m_program->setUniformValue(m_light_pos_loc, QVector3D(0, 0, 70));
 
     m_program->release();
+
+    cout << "  > Initialised GL" << endl;
 }
 
 void GLWidget::setupVertexAttribs()
@@ -319,6 +330,7 @@ void GLWidget::paintGL()
     //glDrawArrays(GL_TRIANGLES, 0, m_logo.vertexCount());
 
     m_points.paintGL(m_program);
+    grid.paintGL(m_program);
 
     m_program->release();
 }
