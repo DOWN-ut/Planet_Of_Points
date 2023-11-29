@@ -6,7 +6,7 @@ Points* Points::instance = nullptr;
 
 Points::Points()
 {
-    int _c = 10000;
+    int _c = 2;
 
     cout << "Creating " << _c << " points" << endl;
     createPoints(QVector3D(0,0,0),QVector3D(5,5,5),QVector3D(7,7,7),_c);
@@ -77,7 +77,7 @@ void Points::createPoints(QVector3D center, QVector3D rangeMin, QVector3D rangeM
 
         QVector3D pos = QVector3D(center.x() + v.x(), center.y() + v.y(), center.z() + v.z());
         Element e = (Element)(int)((rand() / (float)RAND_MAX) * 3);
-        Point p = Point(pos,e);
+        Point p = Point(pos,e,i);
 
         points.push_back(p);
     }

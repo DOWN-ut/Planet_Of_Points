@@ -35,6 +35,11 @@ Grid::Grid(float _size,int _resolution)
 
 void Grid::paintGL(QOpenGLShaderProgram *program)
 {
+    for(int i = 0; i < count ; i++)
+    {
+        if(cells[i].getNbPoints() > 0){cout << "YES" << endl;}
+    }
+
     for(int z = 0; z < resolution; z++)
     {
         for(int y = 0; y < resolution; y++)
@@ -44,7 +49,10 @@ void Grid::paintGL(QOpenGLShaderProgram *program)
                 float gps = size/(float)resolution;
                 glPointSize(gps * 10);//getCell(x,y,z).getDisplaySize());
 
-                float cc = getCell(x,y,z).getNbPoints() / 100.0f;
+                float cc = getCell(x,y,z).getNbPoints() / 100.0f; //cout << getCell(x,y,z).getNbPoints() << endl;
+
+                //if(getCell(x,y,z).getNbPoints() > 0){cout << "Cell " << x << " " << y  << " " << z << " as something"<< endl;}
+
                 GLWidget::setDrawColor(QVector3D(1,1-cc,1-cc));//points[pIt].getColor());
 
                 glBegin(GL_POINTS);

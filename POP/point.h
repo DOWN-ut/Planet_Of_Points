@@ -41,7 +41,7 @@ protected:
 
 public:
     Point();
-    Point(QVector3D p,Element e);
+    Point(QVector3D p,Element e, int _id);
 
     void update(float deltaTime);
     void applyForce(QVector3D force, float deltaTime);
