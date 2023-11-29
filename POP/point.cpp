@@ -18,6 +18,16 @@ void Point::applyForce(QVector3D force, float deltaTime)
     velocity += deltaTime * force;
 }
 
+float Point::getMass()
+{
+    return this->mass;
+}
+
+float Point::getTemp()
+{
+    return this->temperature;
+}
+
 void Point::update(float deltaTime)
 {
     position += velocity * deltaTime;
