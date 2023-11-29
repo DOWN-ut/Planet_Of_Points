@@ -2,11 +2,6 @@
 #include "points.h"
 #include <iostream>
 
-Cell::Cell()
-{      
-
-}
-
 Cell::Cell(int x, int y, int z): nbPoints(0)
 {
     this->x = x;
@@ -54,19 +49,6 @@ int Cell::addPoint(int id){
     return -1;
 }
 
-float Cell::calcPressure(){
-    float volTot = 0.0f;
-    float temp = calcTemp();
-    QVector<Point> points =  Points::Instance()->getPoints();
-
-    for(int i = 0; i < NBPOINTS; i++){
-        if(this->points[i] == -1) {continue;}
-        volTot += points[this->points[i]].getMass();
-    }
-
-    this->pressure = temp/volTot;
-    return temp/volTot;
-}
 
 float Cell::calcTemp(){
     float sum = 0.0f;
@@ -84,19 +66,19 @@ float Cell::calcTemp(){
 }
 
 float Cell::calcPressure(){
-    float sum = 0.0f;
-    int nbPointsInCell = 0;
+    float volTot = 0.0f;
+    float temp = calcTemp();
     QVector<Point> points =  Points::Instance()->getPoints();
 
     for(int i = 0; i < NBPOINTS; i++){
         if(this->points[i] == -1) {continue;}
-        sum += points[this->points[i]].getTemp();
-        nbPointsInCell++;
+        volTot += points[this->points[i]].getMass();
     }
 
-    this->temperature = sum/nbPointsInCell;
-    return sum/nbPointsInCell;
+    this->pressure = temp/volTot;
+    return temp/volTot;
 }
+
 
 int Cell::getNbPoints(){
     return this->nbPoints;

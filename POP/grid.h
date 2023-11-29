@@ -17,7 +17,7 @@ private:
     int resolution;
 
     int count;
-    Cell* cells;
+    Cell* cells = nullptr;
 
     static Grid* instance;
 
