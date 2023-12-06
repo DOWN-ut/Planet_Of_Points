@@ -10,16 +10,24 @@ Cell::Cell(int x, int y, int z): nbPoints(0)
 
     this->pressure = 0;
     this->temperature = 0;
+
+    for(int i = 0; i < NBPOINTS; i++)
+    {
+        this->points[i] = -1;
+    }
 }
 
-Cell::Cell(int x, int y, int z, float pressure, float temperature) : nbPoints(0)
+Cell::Cell(int x, int y, int z, float pressure, float temperature) : Cell(x,y,z)
 {
-    this->x = x;
-    this->y = y;
-    this->z = z;
-
     this->pressure = pressure;
     this->temperature = temperature;;
+}
+
+void Cell::update(float deltatime)
+{
+    calcTemp();
+    calcPressure();
+    calcVector();
 }
 
 void Cell::deletePoint(int id){
@@ -42,10 +50,11 @@ int Cell::addPoint(int id){
         {
             this->points[i] = id;
             this->nbPoints++;
-            cout << "added point  " << this->points[i] << " at " << i << " " << this->nbPoints << endl;
+            //cout << "added point  " << this->points[i] << " at " << i << " " << this->nbPoints << endl;
             return i;
         }
     }
+    cout << "cannot add point : " << this->nbPoints << " is over " << NBPOINTS << endl;
     return -1;
 }
 
@@ -79,6 +88,9 @@ float Cell::calcPressure(){
     return temp/volTot;
 }
 
+QVector3D Cell::calcVector(){
+    return QVector3D(0,0,0);
+}
 
 int Cell::getNbPoints(){
     return this->nbPoints;

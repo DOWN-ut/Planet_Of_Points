@@ -132,6 +132,8 @@ private:
     QOpenGLBuffer m_logoVbo;
 
     int color_location;
+    int gridDisplayMode;
+    int particlesDisplayMode;
 
     QOpenGLShaderProgram *m_program;
 

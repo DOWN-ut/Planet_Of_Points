@@ -26,7 +26,9 @@ public:
     Grid();
     Grid(float size,int resolution);
 
-    void paintGL(QOpenGLShaderProgram *program);
+    void paintGL(QOpenGLShaderProgram *program, int mode);
+
+    void update(float deltatime);
 
     bool isInside(QVector3D v)
     {
@@ -43,15 +45,23 @@ public:
     }
     int getId(int x, int y, int z)
     {
-        return x + (y*resolution) + (z*resolution*resolution);
+        if(x >= 0 && x < resolution && y >= 0 && y < resolution && z >= 0 && z < resolution)
+        {
+            return x + (y*resolution) + (z*resolution*resolution);
+        }
+        else{return -1;}
     }
     QVector3D cellId(QVector3D pos)
     {     
-        return QVector3D(
+        QVector3D v = QVector3D(
                     (int)(((pos.x() + (size*.5f))/size)*resolution),
                     (int)(((pos.y() + (size*.5f))/size)*resolution),
                     (int)(((pos.z() + (size*.5f))/size)*resolution)
                     );
+
+        //if(!isInside(v)){return QVector3D(-1,-1,-1);}
+
+        return v;
     }
     Cell* getCell(int id)
     {
@@ -64,7 +74,9 @@ public:
     Cell* getCell(QVector3D pos)
     {
         QVector3D v = cellId(pos);
-        if(!isInside(v)){return getCell(0,0,0);}
+
+        if(!isInside(v)){return nullptr;}
+
         return getCell((int)v.x(),(int)v.y(),(int)v.z());
     }
 

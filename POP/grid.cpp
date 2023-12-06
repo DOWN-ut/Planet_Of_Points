@@ -8,6 +8,20 @@ Grid* Grid::instance = nullptr;
     cout << "ininin" <<endl;
 }*/
 
+void Grid::update(float deltatime)
+{
+    for(int z = 0; z < resolution; z++)
+    {
+        for(int y = 0; y < resolution; y++)
+        {
+            for(int x = 0; x < resolution; x++)
+            {
+                cells[getId(x,y,z)]->update(deltatime);
+            }
+        }
+    }
+}
+
 Grid::Grid(float _size,int _resolution)
 {
     Grid::instance = this;
@@ -33,7 +47,7 @@ Grid::Grid(float _size,int _resolution)
     cout << "  > Created grid" << endl;
 }
 
-void Grid::paintGL(QOpenGLShaderProgram *program)
+void Grid::paintGL(QOpenGLShaderProgram *program, int mode)
 {
     /*for(int i = 0; i < count ; i++)
     {
@@ -46,14 +60,20 @@ void Grid::paintGL(QOpenGLShaderProgram *program)
         {
             for(int x = 0; x < resolution; x++)
             {
+                if(mode == 0){continue;}
+
                 float gps = size/(float)resolution;
-                glPointSize(gps * 20);//getCell(x,y,z).getDisplaySize());
+                glPointSize(gps * 10);//getCell(x,y,z).getDisplaySize());
 
-                float cc = getCell(x,y,z)->getNbPoints() / 10.0f; //cout << getCell(x,y,z).getNbPoints() << endl;
+                if(mode == 1)
+                {
+                    float cc = getCell(x,y,z)->getNbPoints() / 10.0f; //cout << getCell(x,y,z).getNbPoints() << endl;
+                    GLWidget::setDrawColor(QVector3D(1,1,1),cc > 0.4f ? cc : 0);//points[pIt].getColor());
+                }
+                else if(mode == 2)
+                {
 
-                //if(getCell(x,y,z).getNbPoints() > 0){cout << "Cell " << x << " " << y  << " " << z << " as something"<< endl;}
-
-                GLWidget::setDrawColor(QVector3D(1,1,1),cc > 0.01f ? cc : 0);//points[pIt].getColor());
+                }
 
                 glBegin(GL_POINTS);
                 QVector3D v = getPosition(x,y,z);

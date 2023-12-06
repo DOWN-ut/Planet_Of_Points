@@ -37,7 +37,12 @@ void Point::update(float deltaTime)
     QVector3D cpos = Grid::Instance()->cellId(position);
     int cid = Grid::Instance()->getId(cpos.x(),cpos.y(),cpos.z());
 
-    if(cellId == -1)
+    if(cid == -1)
+    {
+        velocity = QVector3D(0,0,0);
+        position -= velocity * deltaTime;
+    }
+    else if(cellId == -1)
     {
         Grid::Instance()->getCell(cid)->addPoint(id);
         cellId = cid;
@@ -52,6 +57,7 @@ void Point::update(float deltaTime)
 
         if(tempcellArrayId == -1){
             position -= velocity * deltaTime;
+           // cout << "Cannot mode to cell " << cid << endl;
         }
         else{
             cellArrayId = tempcellArrayId;

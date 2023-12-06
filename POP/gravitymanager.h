@@ -17,7 +17,7 @@ private:
     QVector<QVector3D> barycenters;
     QVector3D averageSpeed;
     static GravityManager* instance;
-    float gravityForce = 0.1f;
+    float gravityForce = 0.2f;
 
 public:
     GravityManager();

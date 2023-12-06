@@ -71,8 +71,9 @@ GLWidget::GLWidget(QWidget *parent)
       m_zTranslation(0),
       timeScale(1), paused(false),
 
-      grid(Grid(30,30)),
-
+      grid(Grid(30,40)),
+      gridDisplayMode(0),
+      particlesDisplayMode(1),
       m_program(0)
 {
     m_core = QSurfaceFormat::defaultFormat().profile() == QSurfaceFormat::CoreProfile;
@@ -108,6 +109,7 @@ void GLWidget::updateAll()
     m_zPos += m_zTranslation;
     cout << "Update" << endl;
 
+    grid.update(deltaTime);
     m_points.update(deltaTime);
 
     timer->setInterval(deltaTime * timeScale);
@@ -177,6 +179,9 @@ void GLWidget::keyPressEvent(QKeyEvent *event)
     case  Qt::Key_Space : m_yTranslation = moveStep * deltaTime; break;
     case  Qt::Key_Shift : m_yTranslation = -moveStep * deltaTime; break;
     case Qt::Key_Enter: paused = !paused; if(paused) { timer->stop(); } else{timer->start();} break;
+
+    case Qt::Key_G: gridDisplayMode++; if(gridDisplayMode > 2){gridDisplayMode = 0;} break;
+    case Qt::Key_P: particlesDisplayMode++; if(particlesDisplayMode > 2){particlesDisplayMode=0;}break;
     }
 }
 
@@ -227,6 +232,7 @@ void GLWidget::initializeGL()
     glEnable(GL_COLOR_MATERIAL);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glClearColor(0.0,0.0,0.0,0.0);
 
     m_program = new QOpenGLShaderProgram;
     // Compile vertex shader
@@ -330,8 +336,8 @@ void GLWidget::paintGL()
 
     //glDrawArrays(GL_TRIANGLES, 0, m_logo.vertexCount());
 
-    m_points.paintGL(m_program);
-    grid.paintGL(m_program);
+    m_points.paintGL(m_program,particlesDisplayMode);
+    grid.paintGL(m_program,gridDisplayMode);
 
     m_program->release();
 }

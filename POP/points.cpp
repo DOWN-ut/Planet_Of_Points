@@ -34,11 +34,13 @@ void Points::initGL(QOpenGLShaderProgram *program)
 
 }
 
-void Points::paintGL(QOpenGLShaderProgram *program)
+void Points::paintGL(QOpenGLShaderProgram *program,int mode)
 {
 
     for(unsigned int pIt = 0 ; pIt < points.size() ; ++pIt)
     {
+        if(mode == 0){continue;}
+
         glPointSize(points[pIt].getSize() * baseSize);
         GLWidget::setDrawColor(points[pIt].getColor());
 
