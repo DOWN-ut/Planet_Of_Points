@@ -72,7 +72,8 @@ void Grid::paintGL(QOpenGLShaderProgram *program, int mode)
                 }
                 else if(mode == 2)
                 {
-
+                    float cc = getCell(x,y,z)->getPressure() / 10.0f; //cout << getCell(x,y,z).getNbPoints() << endl;
+                    GLWidget::setDrawColor(QVector3D(1,1,1),cc > 0.4f ? cc : 0);//points[pIt].getColor());
                 }
 
                 glBegin(GL_POINTS);
