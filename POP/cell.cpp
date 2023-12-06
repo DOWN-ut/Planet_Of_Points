@@ -1,5 +1,6 @@
 #include "cell.h"
 #include "points.h"
+#include "grid.h"
 #include <iostream>
 
 Cell::Cell(int x, int y, int z): nbPoints(0)
@@ -89,7 +90,24 @@ float Cell::calcPressure(){
 }
 
 QVector3D Cell::calcVector(){
-    return QVector3D(0,0,0);
+    QVector3D sum = QVector3D(0,0,0);
+    QVector3D voisins[6];
+    voisins[0] = QVector3D(-1,0,0); voisins[1] = QVector3D(1,0,0); voisins[2] = QVector3D(0,-1,0); voisins[3] = QVector3D(0,1,0); voisins[4] = QVector3D(0,0,-1); voisins[5] = QVector3D(0,0,1);
+
+    float diffPresure = 0.0;
+
+
+    for(int i = 0; i < 6; i++){
+        Cell* neighbor = Grid::Instance()->getCell(x-voisins[i].x(), y-voisins[i].y(), z-voisins[i].z());
+        if(neighbor == nullptr){
+            continue;
+        }
+        diffPresure = this->pressure - neighbor->getPressure();
+        QVector3D resultante = voisins[i] * diffPresure;
+        sum += resultante;
+    }
+
+    return sum;
 }
 
 int Cell::getNbPoints(){
