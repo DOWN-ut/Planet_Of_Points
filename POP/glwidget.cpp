@@ -71,7 +71,7 @@ GLWidget::GLWidget(QWidget *parent)
       m_zTranslation(0),
       timeScale(1), paused(false),
 
-      grid(Grid(30,10)),
+      grid(Grid(30,30)),
 
       m_program(0)
 {
@@ -204,9 +204,9 @@ void GLWidget::cleanup()
     doneCurrent();
 }
 
-void GLWidget::setDrawColor(QVector3D color)
+void GLWidget::setDrawColor(QVector3D color, float alpha)
 {
-    instance->m_program->setUniformValue(instance->color_location, color);
+    instance->m_program->setUniformValue(instance->color_location, QVector4D(color.x(),color.y(),color.z(),alpha));
 }
 
 void GLWidget::initializeGL()
@@ -225,6 +225,8 @@ void GLWidget::initializeGL()
     glClearColor(0, 0, 0, m_transparent ? 0 : 1);
 
     glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     m_program = new QOpenGLShaderProgram;
     // Compile vertex shader

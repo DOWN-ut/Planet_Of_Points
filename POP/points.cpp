@@ -6,7 +6,7 @@ Points* Points::instance = nullptr;
 
 Points::Points()
 {
-    int _c = 2;
+    int _c = 10000;
 
     cout << "Creating " << _c << " points" << endl;
     createPoints(QVector3D(0,0,0),QVector3D(5,5,5),QVector3D(7,7,7),_c);

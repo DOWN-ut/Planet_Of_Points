@@ -61,6 +61,7 @@
 #include <QKeyEvent>
 #include <QTimer>
 #include <iostream>
+#include <QVector4D>
 
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
 
@@ -78,7 +79,7 @@ public:
     QSize minimumSizeHint() const override;
     QSize sizeHint() const override;
 
-    static void setDrawColor(QVector3D color);
+    static void setDrawColor(QVector3D color, float alpha = 1);
 
 
 

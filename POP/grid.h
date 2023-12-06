@@ -5,6 +5,7 @@
 #include <QVector3D>
 #include <QOpenGLShaderProgram>
 #include <iostream>
+#include <vector>
 using namespace std;
 
 //#include "glwidget.h"
@@ -17,7 +18,7 @@ private:
     int resolution;
 
     int count;
-    Cell* cells = nullptr;
+    Cell** cells;
 
     static Grid* instance;
 
@@ -52,15 +53,15 @@ public:
                     (int)(((pos.z() + (size*.5f))/size)*resolution)
                     );
     }
-    Cell getCell(int id)
+    Cell* getCell(int id)
     {
         return cells[id];
     }
-    Cell getCell(int x, int y, int z)
+    Cell* getCell(int x, int y, int z)
     {
         return getCell(getId(x,y,z));
     }
-    Cell getCell(QVector3D pos)
+    Cell* getCell(QVector3D pos)
     {
         QVector3D v = cellId(pos);
         if(!isInside(v)){return getCell(0,0,0);}

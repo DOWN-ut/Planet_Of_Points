@@ -30,7 +30,7 @@ float Point::getTemp()
 
 void Point::update(float deltaTime)
 {
-    //position += velocity * deltaTime;
+    position += velocity * deltaTime;
 
     temperature = 1;
 
@@ -39,23 +39,23 @@ void Point::update(float deltaTime)
 
     if(cellId == -1)
     {
-        Grid::Instance()->getCell(cid).addPoint(id);
+        Grid::Instance()->getCell(cid)->addPoint(id);
         cellId = cid;
-        cout << Grid::Instance()->getCell(cid).getNbPoints() << endl;
+        cout << Grid::Instance()->getCell(cid)->getNbPoints() << endl;
     }
     else if(cid != cellId)
     {
-        int tempcellArrayId = Grid::Instance()->getCell(cid).addPoint(id);
-        cout << "Moved from  " << cellId << " to " << cid << endl;
+        int tempcellArrayId = Grid::Instance()->getCell(cid)->addPoint(id);
+        //cout << "Moved from  " << cellId << " to " << cid << endl;
 
-        cout << Grid::Instance()->getCell(cid).getNbPoints() << endl;
+        //cout << Grid::Instance()->getCell(cid)->getNbPoints() << endl;
 
         if(tempcellArrayId == -1){
             position -= velocity * deltaTime;
         }
         else{
             cellArrayId = tempcellArrayId;
-            Grid::Instance()->getCell(cellId).deletePoint(id);
+            Grid::Instance()->getCell(cellId)->deletePoint(id);
             cellId = cid;
         }
     }
