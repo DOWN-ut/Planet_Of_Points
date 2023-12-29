@@ -71,7 +71,7 @@ GLWidget::GLWidget(QWidget *parent)
       m_zTranslation(0),
       timeScale(1), paused(false),
 
-      grid(Grid(30,40)),
+      grid(Grid(30,50)),
       gridDisplayMode(0),
       particlesDisplayMode(1),
       m_program(0)

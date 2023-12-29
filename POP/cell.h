@@ -3,6 +3,8 @@
 
 #include <QVector3D>
 #define NBPOINTS 1000
+#define FRICTIONFORCE 10
+#define PRESSIONFORCE 0.01
 
 class Cell
 {
@@ -15,6 +17,8 @@ class Cell
         int points[NBPOINTS];
         float pressure;
         float temperature;
+        QVector3D pressureVector;
+        float friction;
 
     public:
         Cell();
@@ -25,14 +29,15 @@ class Cell
 
         void deletePoint(int id);
         int addPoint(int id);
-        float calcTemp();
-        float calcPressure();
-        QVector3D calcVector();
+        void calcParams();
+        void calcVector();
 
         int getNbPoints();
         int getX();
         int getY();
         int getZ();
+        QVector3D getPressureVector();
+        float getFriction();
 
         float getPressure(){return pressure;}
 };

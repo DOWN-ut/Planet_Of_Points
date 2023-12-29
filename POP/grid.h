@@ -65,6 +65,9 @@ public:
     }
     Cell* getCell(int id)
     {
+        if(id < 0){
+            return nullptr;
+        }
         return cells[id];
     }
     Cell* getCell(int x, int y, int z)

@@ -26,9 +26,13 @@ Cell::Cell(int x, int y, int z, float pressure, float temperature) : Cell(x,y,z)
 
 void Cell::update(float deltatime)
 {
-    calcTemp();
-    calcPressure();
-    calcVector();
+    float val = std::rand()/(float)RAND_MAX;
+    int nombreAleatoire = std::rand() % 10;
+
+    if(val > 0.9f){
+        calcParams();
+        calcVector();
+    }
 }
 
 void Cell::deletePoint(int id){
@@ -59,37 +63,25 @@ int Cell::addPoint(int id){
     return -1;
 }
 
-
-float Cell::calcTemp(){
+void Cell::calcParams(){
     float sum = 0.0f;
+    float volTot = 0.0f;
     int nbPointsInCell = 0;
     QVector<Point> points =  Points::Instance()->getPoints();
 
     for(int i = 0; i < NBPOINTS; i++){
         if(this->points[i] == -1) {continue;}
         sum += points[this->points[i]].getTemp();
+        volTot += points[this->points[i]].getMass();
         nbPointsInCell++;
     }
 
-    this->temperature = sum/nbPointsInCell;
-    return sum/nbPointsInCell;
+    this->temperature = nbPointsInCell > 0? sum/nbPointsInCell : 0;
+    this->pressure = volTot > 0? this->temperature/volTot : 0;
+    this->friction = nbPointsInCell/(float)NBPOINTS;
 }
 
-float Cell::calcPressure(){
-    float volTot = 0.0f;
-    float temp = calcTemp();
-    QVector<Point> points =  Points::Instance()->getPoints();
-
-    for(int i = 0; i < NBPOINTS; i++){
-        if(this->points[i] == -1) {continue;}
-        volTot += points[this->points[i]].getMass();
-    }
-
-    this->pressure = temp/volTot;
-    return temp/volTot;
-}
-
-QVector3D Cell::calcVector(){
+void Cell::calcVector(){
     QVector3D sum = QVector3D(0,0,0);
     QVector3D voisins[6];
     voisins[0] = QVector3D(-1,0,0); voisins[1] = QVector3D(1,0,0); voisins[2] = QVector3D(0,-1,0); voisins[3] = QVector3D(0,1,0); voisins[4] = QVector3D(0,0,-1); voisins[5] = QVector3D(0,0,1);
@@ -106,8 +98,9 @@ QVector3D Cell::calcVector(){
         QVector3D resultante = voisins[i] * diffPresure;
         sum += resultante;
     }
-
-    return sum;
+    float magn = sum.length();
+    sum.normalize();
+    this->pressureVector = sum * magn * magn;
 }
 
 int Cell::getNbPoints(){
@@ -121,4 +114,10 @@ int Cell::getY(){
 }
 int Cell::getZ(){
     return this->z;
+}
+QVector3D Cell::getPressureVector(){
+    return PRESSIONFORCE*this->pressureVector;
+}
+float Cell::getFriction(){
+    return this->friction*FRICTIONFORCE;
 }
