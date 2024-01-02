@@ -2,9 +2,10 @@
 #define CELL_H
 
 #include <QVector3D>
-#define NBPOINTS 1000
+#define MAXNBPOINTS 1000
+#define MINNBPOINTS 1
 #define FRICTIONFORCE 10
-#define PRESSIONFORCE 0.01
+#define PRESSIONFORCE 0.5
 
 class Cell
 {
@@ -13,8 +14,8 @@ class Cell
         int y;
         int z;
 
-        int nbPoints;
-        int points[NBPOINTS];
+        int nbPoints; int maxNbPoints;
+        int* points;//[NBPOINTS];
         float pressure;
         float temperature;
         QVector3D pressureVector;
@@ -22,8 +23,8 @@ class Cell
 
     public:
         Cell();
-        Cell(int x, int y, int z);
-        Cell(int x, int y, int z, float pressure, float temperature);
+        Cell(int x, int y, int z, float mnbp);
+        Cell(int x, int y, int z, float mnbp, float pressure, float temperature);
 
         void update(float deltatime);
 

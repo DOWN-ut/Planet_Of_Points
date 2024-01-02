@@ -31,7 +31,7 @@ private:
     void setupVertices();
     void setupTriangles();
 
-    const float baseSize = 2;
+    const float baseSize = 5;
 
     static Points* instance;
 

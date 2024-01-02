@@ -32,13 +32,17 @@ Grid::Grid(float _size,int _resolution)
     cells = new Cell*[count];
     cout << "Creating grid (" << size << "  " << count << "  " << resolution << ")" << endl;
 
+    QVector3D center = QVector3D(resolution * .5f,resolution * .5f,resolution * .5f);
+    float sizeV = QVector3D(resolution,resolution,resolution).length();
     for(int z = 0; z < resolution; z++)
     {
         for(int y = 0; y < resolution; y++)
         {
             for(int x = 0; x < resolution; x++)
             {
-                Cell* cell = new Cell(x,y,z); // x y z
+                QVector3D d = QVector3D(x,y,z);
+                float r = (d-center).length() / sizeV;
+                Cell* cell = new Cell(x,y,z,r); // x y z
                 cells[getId(x,y,z)] = cell;
             }
         }

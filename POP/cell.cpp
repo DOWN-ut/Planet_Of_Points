@@ -3,22 +3,26 @@
 #include "grid.h"
 #include <iostream>
 
-Cell::Cell(int x, int y, int z): nbPoints(0)
+Cell::Cell(int x, int y, int z, float mnbp): nbPoints(0)
 {
     this->x = x;
     this->y = y;
     this->z = z;
 
+    //courbe en S
+    this->maxNbPoints = MINNBPOINTS + ((MAXNBPOINTS-MINNBPOINTS) * (1-r));
+    this->points = new int[maxNbPoints];
+
     this->pressure = 0;
     this->temperature = 0;
 
-    for(int i = 0; i < NBPOINTS; i++)
+    for(int i = 0; i < maxNbPoints; i++)
     {
         this->points[i] = -1;
     }
 }
 
-Cell::Cell(int x, int y, int z, float pressure, float temperature) : Cell(x,y,z)
+Cell::Cell(int x, int y, int z, float mnbp, float pressure, float temperature) : Cell(x,y,z,mnbp)
 {
     this->pressure = pressure;
     this->temperature = temperature;;
@@ -36,7 +40,7 @@ void Cell::update(float deltatime)
 }
 
 void Cell::deletePoint(int id){
-    for(unsigned long int i = 0; i < NBPOINTS; i++){
+    for(unsigned long int i = 0; i < maxNbPoints; i++){
         if(id == this->points[i]){
             this->points[i] = -1;
             this->nbPoints--;
@@ -49,7 +53,7 @@ void Cell::deletePoint(int id){
 }
 
 int Cell::addPoint(int id){
-    for(unsigned long int i = 0; i < NBPOINTS; i++)
+    for(unsigned long int i = 0; i < maxNbPoints; i++)
     {
         if(this->points[i] == -1)
         {
@@ -59,7 +63,7 @@ int Cell::addPoint(int id){
             return i;
         }
     }
-    cout << "cannot add point : " << this->nbPoints << " is over " << NBPOINTS << endl;
+    cout << "cannot add point : " << this->nbPoints << " is over " << maxNbPoints << endl;
     return -1;
 }
 
@@ -69,7 +73,7 @@ void Cell::calcParams(){
     int nbPointsInCell = 0;
     QVector<Point> points =  Points::Instance()->getPoints();
 
-    for(int i = 0; i < NBPOINTS; i++){
+    for(int i = 0; i < maxNbPoints; i++){
         if(this->points[i] == -1) {continue;}
         sum += points[this->points[i]].getTemp();
         volTot += points[this->points[i]].getMass();
@@ -78,7 +82,8 @@ void Cell::calcParams(){
 
     this->temperature = nbPointsInCell > 0? sum/nbPointsInCell : 0;
     this->pressure = volTot > 0? this->temperature/volTot : 0;
-    this->friction = nbPointsInCell/(float)NBPOINTS;
+    this->friction = nbPointsInCell/(float)maxNbPoints;
+    this->friction = this->friction * this->friction;
 }
 
 void Cell::calcVector(){

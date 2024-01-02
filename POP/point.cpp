@@ -10,7 +10,7 @@ Point::Point(QVector3D p,Element e, int _id) : cellId(-1), id(_id)
 {
     position = p;
     element = e;
-    velocity = QVector3D(0,0,0);
+    velocity = QVector3D((rand() / (float)RAND_MAX)*MAXVEL,(rand() / (float)RAND_MAX)*MAXVEL,(rand() / (float)RAND_MAX)*MAXVEL);
     mass = 1;
 }
 
@@ -33,10 +33,15 @@ void Point::update(float deltaTime)
 {
     if(this->cellId != -1)
     {
-        applyForce(Grid::Instance()->getCell(cellId)->getPressureVector(), deltaTime);
-        float val = (1 + (Grid::Instance()->getCell(cellId)->getFriction() * deltaTime));
-        //if(Grid::Instance()->getCell(cellId)->getFriction()>0)std::cout<<Grid::Instance()->getCell(cellId)->getFriction()<<std::endl;
-        velocity /= val;
+        applyForce(Grid::Instance()->getCell(cellId)->getPressureVector() * getSize(), deltaTime);
+
+        if(velocity.length() > 0.5f)
+        {
+            float v = (Grid::Instance()->getCell(cellId)->getFriction() * deltaTime);
+            float val = (1 + v);
+            //if(Grid::Instance()->getCell(cellId)->getFriction()>0)std::cout<<Grid::Instance()->getCell(cellId)->getFriction()<<std::endl;
+            velocity /= val;
+        }
     }
     position += velocity * deltaTime;
 
@@ -65,6 +70,7 @@ void Point::update(float deltaTime)
 
         if(tempcellArrayId == -1){
             position -= velocity * deltaTime;
+            velocity = -velocity;
            // cout << "Cannot mode to cell " << cid << endl;
         }
         else{

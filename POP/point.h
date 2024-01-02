@@ -12,6 +12,8 @@ enum Element
     WATER,ROCK,METAL
 };
 
+#define MAXVEL 0.2
+
 class Point
 {
 protected:
