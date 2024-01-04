@@ -8,8 +8,8 @@ out vec3 v_normal;
 uniform mat4 mvp_matrix;
 uniform mat3 normal_matrix;
 void main() {
-   // v_position = vertex.xyz;
-    //v_normal = normal_matrix * normal;
+    v_position = vertex.xyz;
+    v_normal = normal_matrix * normal;
 
     // Calculate vertex position in screen space
     gl_Position = mvp_matrix * vec4(vertex,1.);

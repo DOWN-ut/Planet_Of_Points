@@ -1,20 +1,26 @@
 #include "cell.h"
 #include "points.h"
 #include "grid.h"
+#include "math.h"
 #include <iostream>
 
-Cell::Cell(int x, int y, int z, float mnbp): nbPoints(0)
+Cell::Cell(int x, int y, int z, float rcenter): nbPoints(0)
 {
     this->x = x;
     this->y = y;
     this->z = z;
 
     //courbe en S
-    this->maxNbPoints = MINNBPOINTS + ((MAXNBPOINTS-MINNBPOINTS) * (1-r));
+    this->centerDistanceRatio = rcenter;
+
+    float d = (MAXNBPOINTS-MINNBPOINTS) ;
+    float r = (1-rcenter);
+    this->maxNbPoints = MINNBPOINTS + (0.1+(((sin(r*M_PI)*pow(r,3))*d*3)));
     this->points = new int[maxNbPoints];
 
     this->pressure = 0;
     this->temperature = 0;
+    this->updateCount = 0;
 
     for(int i = 0; i < maxNbPoints; i++)
     {
@@ -25,17 +31,19 @@ Cell::Cell(int x, int y, int z, float mnbp): nbPoints(0)
 Cell::Cell(int x, int y, int z, float mnbp, float pressure, float temperature) : Cell(x,y,z,mnbp)
 {
     this->pressure = pressure;
-    this->temperature = temperature;;
+    this->temperature = temperature;
 }
 
 void Cell::update(float deltatime)
 {
     float val = std::rand()/(float)RAND_MAX;
-    int nombreAleatoire = std::rand() % 10;
+    float threshold = 0.95f - (updateCount / (float)MAXUPDATECOUNT);
 
-    if(val > 0.9f){
+    if(updateCount > 0 && val > threshold)
+    {
         calcParams();
         calcVector();
+        updateCount = 0;
     }
 }
 
@@ -45,6 +53,7 @@ void Cell::deletePoint(int id){
             this->points[i] = -1;
             this->nbPoints--;
             //cout << "removed point  " << i << " " << nbPoints << endl;
+            updateCount++;
             break;
         }
     }
@@ -60,10 +69,11 @@ int Cell::addPoint(int id){
             this->points[i] = id;
             this->nbPoints++;
             //cout << "added point  " << this->points[i] << " at " << i << " " << this->nbPoints << endl;
+            updateCount++;
             return i;
         }
     }
-    cout << "cannot add point : " << this->nbPoints << " is over " << maxNbPoints << endl;
+    //cout << "cannot add point : " << this->nbPoints << " is over " << maxNbPoints << endl;
     return -1;
 }
 
@@ -76,12 +86,12 @@ void Cell::calcParams(){
     for(int i = 0; i < maxNbPoints; i++){
         if(this->points[i] == -1) {continue;}
         sum += points[this->points[i]].getTemp();
-        volTot += points[this->points[i]].getMass();
+        volTot += points[this->points[i]].getVolume();
         nbPointsInCell++;
     }
 
     this->temperature = nbPointsInCell > 0? sum/nbPointsInCell : 0;
-    this->pressure = volTot > 0? this->temperature/volTot : 0;
+    this->pressure = volTot * volTot;//volTot > 0? this->temperature/volTot : 0;
     this->friction = nbPointsInCell/(float)maxNbPoints;
     this->friction = this->friction * this->friction;
 }
@@ -105,7 +115,7 @@ void Cell::calcVector(){
     }
     float magn = sum.length();
     sum.normalize();
-    this->pressureVector = sum * magn * magn;
+    this->pressureVector = sum * magn;//* magn;
 }
 
 int Cell::getNbPoints(){
@@ -124,5 +134,5 @@ QVector3D Cell::getPressureVector(){
     return PRESSIONFORCE*this->pressureVector;
 }
 float Cell::getFriction(){
-    return this->friction*FRICTIONFORCE;
+    return this->friction*FRICTIONFORCE*(1-centerDistanceRatio);
 }

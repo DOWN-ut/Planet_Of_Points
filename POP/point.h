@@ -6,6 +6,7 @@ class Grid;
 class GLWidget;
 
 #include "cell.h"
+#include <GL/glut.h>
 
 enum Element
 {
@@ -41,6 +42,9 @@ protected:
             0.5
     };
 
+    void applyFriction(float deltaTime);
+    void applyPressure(float deltaTime);
+
 public:
     Point();
     Point(QVector3D p,Element e, int _id);
@@ -48,6 +52,7 @@ public:
     void update(float deltaTime);
     void applyForce(QVector3D force, float deltaTime);
 
+    Element getElement(){return element;}
     QVector3D getColor(){return elementColors[(int)element];}
     float getSize(){return elementSizes[(int)element] * temperature;}
 
@@ -56,8 +61,13 @@ public:
 
     void addVelocity(QVector3D v){velocity += v;}
 
+    void drawTriangle(QVector3D p0,QVector3D p1,QVector3D p2);
+    void drawSphere(float r, int slices, int stacks);
+    void draw(float baseSize);
+
     float getMass();
     float getTemp();
+    float getVolume();
 
 };
 

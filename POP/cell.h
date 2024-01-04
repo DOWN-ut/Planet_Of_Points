@@ -4,8 +4,9 @@
 #include <QVector3D>
 #define MAXNBPOINTS 1000
 #define MINNBPOINTS 1
-#define FRICTIONFORCE 10
-#define PRESSIONFORCE 0.5
+#define FRICTIONFORCE 500
+#define PRESSIONFORCE 0.005
+#define MAXUPDATECOUNT 5
 
 class Cell
 {
@@ -20,6 +21,9 @@ class Cell
         float temperature;
         QVector3D pressureVector;
         float friction;
+        float centerDistanceRatio;
+
+        int updateCount;
 
     public:
         Cell();

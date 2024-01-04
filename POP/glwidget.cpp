@@ -71,9 +71,9 @@ GLWidget::GLWidget(QWidget *parent)
       m_zTranslation(0),
       timeScale(1), paused(false),
 
-      grid(Grid(30,80)),
+      grid(Grid(30,100)),
       gridDisplayMode(0),
-      particlesDisplayMode(1),
+      particlesDisplayMode(0),
       m_program(0)
 {
     m_core = QSurfaceFormat::defaultFormat().profile() == QSurfaceFormat::CoreProfile;
@@ -181,7 +181,7 @@ void GLWidget::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Enter: paused = !paused; if(paused) { timer->stop(); } else{timer->start();} break;
 
     case Qt::Key_G: gridDisplayMode++; if(gridDisplayMode > 2){gridDisplayMode = 0;} break;
-    case Qt::Key_P: particlesDisplayMode++; if(particlesDisplayMode > 2){particlesDisplayMode=0;}break;
+    case Qt::Key_P: particlesDisplayMode++; if(particlesDisplayMode > 3){particlesDisplayMode=0;}break;
     }
 }
 

@@ -6,7 +6,7 @@ Points* Points::instance = nullptr;
 
 Points::Points()
 {
-    int _c = 1000;
+    int _c = 5000;
 
     cout << "Creating " << _c << " points" << endl;
     createPoints(QVector3D(0,0,0),QVector3D(5,5,5),QVector3D(7,7,7),_c);
@@ -39,14 +39,8 @@ void Points::paintGL(QOpenGLShaderProgram *program,int mode)
 
     for(unsigned int pIt = 0 ; pIt < points.size() ; ++pIt)
     {
-        if(mode == 0){continue;}
-
-        glPointSize(points[pIt].getSize() * baseSize);
-        GLWidget::setDrawColor(points[pIt].getColor());
-
-        glBegin(GL_POINTS);
-        glVertex3f( points[pIt].getPosition().x() , points[pIt].getPosition().y(), points[pIt].getPosition().z() );
-        glEnd();
+        if(mode != 0 && mode-1 != (int)points[pIt].getElement()){continue;}
+        points[pIt].draw(baseSize);
      }
 
 
