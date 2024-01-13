@@ -31,13 +31,14 @@ private:
     void setupVertices();
     void setupTriangles();
 
-    const float baseSize = 2;
+    const float baseSize = 0.2f;
 
     static Points* instance;
 
 public:
     Points();
     ~Points();
+    void initPoints();
 
     void draw();
 

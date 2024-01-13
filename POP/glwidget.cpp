@@ -53,7 +53,7 @@
 #include <QOpenGLShaderProgram>
 #include <QCoreApplication>
 #include <math.h>
-
+#include <QtMath>
 GLWidget* GLWidget::instance = nullptr;
 
 bool GLWidget::m_transparent = false;
@@ -63,15 +63,13 @@ GLWidget::GLWidget(QWidget *parent)
       m_xRot(0),
       m_yRot(0),
       m_zRot(0),
-      m_xPos(5),
-      m_yPos(-5),
-      m_zPos(20),
+      m_pos(QVector3D(0,0,20)),
       m_xTranslation(0),
       m_yTranslation(0),
       m_zTranslation(0),
       timeScale(1), paused(false),
 
-      grid(Grid(30,100)),
+      grid(Grid(30,75)),
       gridDisplayMode(0),
       particlesDisplayMode(0),
       m_program(0)
@@ -104,9 +102,13 @@ GLWidget::~GLWidget()
 
 void GLWidget::updateAll()
 {
-    m_xPos += m_xTranslation;
-    m_yPos += m_yTranslation;
-    m_zPos += m_zTranslation;
+    m_pos += QVector3D(
+                (m_xTranslation * cos( (m_yRot / 5700.0f) * 2 * M_PI)) + (-m_zTranslation * sin( (m_yRot / 5700.0f) * 2 * M_PI)),
+                m_yTranslation,// * cos( (m_yRot / 5700.0f) * 2 * M_PI),
+                (m_zTranslation * cos( (m_yRot / 5700.0f) * 2 * M_PI)) + (m_xTranslation * sin( (m_yRot / 5700.0f) * 2 * M_PI)) ); //(cameraFront * m_zTranslation) + (cameraUp * m_yTranslation) + (cameraRight * m_xTranslation);
+    //cout << m_pos.x() << " " << m_pos.y() << " " << m_pos.z() << endl;
+    cout << m_xRot << "  " << m_yRot << "  " << m_zRot << "    " << cos( (m_yRot / 5700.0f) * 2 * M_PI) <<  endl;
+
     cout << "Update" << endl;
 
     grid.update(deltaTime);
@@ -168,16 +170,26 @@ void GLWidget::setZRotation(int angle)
     }
 }
 
+void GLWidget::move(QVector3D v)
+{
+
+    float speed = 1;
+    m_xTranslation = moveStep * v.x() * speed * deltaTime;
+    m_yTranslation = moveStep * v.y()* speed * deltaTime;
+    m_zTranslation = moveStep * v.z()* speed * deltaTime;
+
+}
+
 void GLWidget::keyPressEvent(QKeyEvent *event)
 {
     switch(event->key())
     {
-    case  Qt::Key_Z : m_zTranslation = -moveStep * deltaTime; break;
-    case  Qt::Key_S : m_zTranslation = moveStep * deltaTime; break;
-    case  Qt::Key_Q : m_xTranslation = moveStep * deltaTime; break;
-    case  Qt::Key_D : m_xTranslation = -moveStep * deltaTime; break;
-    case  Qt::Key_Space : m_yTranslation = moveStep * deltaTime; break;
-    case  Qt::Key_Shift : m_yTranslation = -moveStep * deltaTime; break;
+    case  Qt::Key_Z : move(QVector3D(0,0,-1)); break;
+    case  Qt::Key_S : move(QVector3D(0,0,1)); break;
+    case  Qt::Key_Q : move(QVector3D(1,0,0)); break;
+    case  Qt::Key_D : move(QVector3D(-1,0,0)); break;
+    case  Qt::Key_Space : move(QVector3D(0,1,0)); break;
+    case  Qt::Key_Shift : move(QVector3D(0,-1,0)); break;
     case Qt::Key_Enter: paused = !paused; if(paused) { timer->stop(); } else{timer->start();} break;
 
     case Qt::Key_G: gridDisplayMode++; if(gridDisplayMode > 2){gridDisplayMode = 0;} break;
@@ -258,8 +270,6 @@ void GLWidget::initializeGL()
     m_normal_matrix_loc = m_program->uniformLocation("normal_matrix");
     m_light_pos_loc = m_program->uniformLocation("light_position");
 
-    m_points.initGL(m_program);
-
     // Create a vertex array object. In OpenGL ES 2.0 and OpenGL 2.x
     // implementations this is optional and support may not be present
     // at all. Nonetheless the below code works in all cases and makes
@@ -285,6 +295,7 @@ void GLWidget::initializeGL()
     setupVertexAttribs();
 
     color_location = m_program->uniformLocation("color");
+    camera_location = m_program->uniformLocation("camera");
 
     // Our camera never changes in this example.
     m_view.setToIdentity();
@@ -293,7 +304,9 @@ void GLWidget::initializeGL()
     // Light position is fixed.
     //m_program->setUniformValue(m_light_pos_loc, QVector3D(0, 0, 70));
 
-    m_program->release();
+    m_points.initGL(m_program);
+
+    //m_program->release();
 
     cout << "  > Initialised GL" << endl;
 }
@@ -322,7 +335,7 @@ void GLWidget::paintGL()
     m_model.rotate(m_yRot / 16.0f, 0, 1, 0);
     m_model.rotate(m_zRot / 16.0f, 0, 0, 1);
 
-    m_model.translate(m_xPos,m_yPos,m_zPos);
+    m_model.translate(m_pos.x(),m_pos.y(),m_pos.z());
 
     QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
     m_program->bind();
@@ -333,6 +346,7 @@ void GLWidget::paintGL()
 
     // Set normal matrix
     m_program->setUniformValue(m_normal_matrix_loc, normal_matrix);
+    m_program->setUniformValue(camera_location, m_pos);
 
     //glDrawArrays(GL_TRIANGLES, 0, m_logo.vertexCount());
 
@@ -358,12 +372,33 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
     int dx = event->x() - m_last_position.x();
     int dy = event->y() - m_last_position.y();
 
-    if (event->buttons() & Qt::LeftButton) {
+    if (event->buttons() & Qt::LeftButton)
+    {
         setXRotation(m_xRot + 8 * dy);
         setYRotation(m_yRot + 8 * dx);
-    } else if (event->buttons() & Qt::RightButton) {
+
+        yaw += dx;
+        pitch -= dy;
+        pitch = qBound(-89.0f,pitch,89.0f);
+        updateCameraVectors();
+
+    } else if (event->buttons() & Qt::RightButton)
+    {
         setXRotation(m_xRot + 8 * dy);
         setZRotation(m_zRot + 8 * dx);
     }
     m_last_position = event->pos();
 }
+void GLWidget::updateCameraVectors()
+{
+
+    // Calculate the new camera front vector
+        QVector3D newFront;
+        newFront.setX(cos(qDegreesToRadians(yaw)) * cos(qDegreesToRadians(pitch)));
+        newFront.setY(sin(qDegreesToRadians(pitch)));
+        newFront.setZ(sin(qDegreesToRadians(yaw)) * cos(qDegreesToRadians(pitch)));
+        cameraFront = newFront.normalized();
+
+        cameraRight = QVector3D::crossProduct(cameraFront, QVector3D(0.0f, 1.0f, 0.0f)).normalized();
+        cameraUp = QVector3D::crossProduct(cameraRight, cameraFront).normalized();
+    }

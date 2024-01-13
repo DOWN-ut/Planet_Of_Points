@@ -6,14 +6,18 @@ Points* Points::instance = nullptr;
 
 Points::Points()
 {
+    initPoints();
+    Points::instance = this;
+}
+
+void Points::initPoints()
+{
     int _c = 5000;
 
     cout << "Creating " << _c << " points" << endl;
     createPoints(QVector3D(0,0,0),QVector3D(5,5,5),QVector3D(7,7,7),_c);
-
-    Points::instance = this;
+    cout << " >> Succesfull" << endl;
 }
-
 
 Points::~Points()
 {
@@ -31,7 +35,10 @@ void Points::update(float deltaTime)
 
 void Points::initGL(QOpenGLShaderProgram *program)
 {
-
+    for(Point p : points)
+    {
+        p.initGL();
+    }
 }
 
 void Points::paintGL(QOpenGLShaderProgram *program,int mode)
@@ -40,7 +47,7 @@ void Points::paintGL(QOpenGLShaderProgram *program,int mode)
     for(unsigned int pIt = 0 ; pIt < points.size() ; ++pIt)
     {
         if(mode != 0 && mode-1 != (int)points[pIt].getElement()){continue;}
-        points[pIt].draw(baseSize);
+        points[pIt].draw(program,baseSize);
      }
 
 

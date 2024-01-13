@@ -106,19 +106,28 @@ protected:
 
     void updateAll();
 
+    void move(QVector3D v);
+
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
 
 private:
     void setupVertexAttribs();
+    void updateCameraVectors();
 
     bool m_core;
-    int m_xRot;
-    int m_yRot;
-    int m_zRot;
-    float m_xPos,m_xTranslation;
-    float m_yPos,m_yTranslation;
-    float m_zPos,m_zTranslation;
+    float m_xRot;
+    float m_yRot;
+    float m_zRot;
+
+    QVector3D cameraFront{0.0f, 0.0f, -1.0f}, cameraUp{0.0f, 1.0f, 0.0f},cameraRight{1.0f,0.0f,0.0f};
+    float yaw = -90.0f,pitch;
+
+    QVector3D m_pos;
+    float m_xTranslation;
+    float m_yTranslation;
+    float m_zTranslation;
+
     QPoint m_last_position;
 
     float moveStep;
@@ -131,6 +140,7 @@ private:
     QOpenGLVertexArrayObject m_vao;
     QOpenGLBuffer m_logoVbo;
 
+    int camera_location;
     int color_location;
     int gridDisplayMode;
     int particlesDisplayMode;
