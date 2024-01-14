@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     QMenuBar *menuBar = new QMenuBar;
-    QMenu *menuWindow = menuBar->addMenu(tr("&Window"));
+    //QMenu *menuWindow = menuBar->addMenu(tr("&Window"));
 
     setMenuBar(menuBar);
     initGLWindow();

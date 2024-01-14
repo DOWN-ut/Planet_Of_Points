@@ -15,14 +15,21 @@ void main() {
 
    vec3 normal = normalize(-1 * v_normal);
 
-   vec3 lightPos = vec3(1000,20,-1000);
-   vec3 d = vec3(-1,0,0);//normalize(lightPos - v_position);
-   float a = dot(d,normal);
-   a = max(0,a);
+   if(length(normal) == 0.0)
+   {
+       fragColor = vec4(color.xyz,1);
+   }
+    else
+   {
+       vec3 lightPos = vec3(1000,20,-1000);
+       vec3 d = vec3(-1,0,0);//normalize(lightPos - v_position);
+       float a = dot(d,normal);
+       a = max(0,a);
 
-   vec3 re = -reflect(normalize(camera - v_position),normal);
-   float b = dot(re,normal);
+       vec3 re = -reflect(normalize(camera - v_position),normal);
+       float b = dot(re,normal);
 
-   vec3 diffuse = vec3(0.05,0.05,0.05) + (0.75 * (vec3(color) * a));// + (0.2 * (vec3(1,1,1) * b));
-   fragColor = vec4(diffuse,1); // color * (a > 0 ? a : -a);//vec4(1.0,1.0,1.0,1.0);//vec4(col, 1.0);
+       vec3 diffuse = vec3(0.05,0.05,0.05) + (0.95 * (vec3(color) * a));// + (0.2 * (vec3(1,1,1) * b));
+       fragColor = vec4(diffuse,1); // color * (a > 0 ? a : -a);//vec4(1.0,1.0,1.0,1.0);//vec4(col, 1.0);
+   }
 }

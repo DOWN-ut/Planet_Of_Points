@@ -41,14 +41,18 @@ void Cell::update(float deltatime)
 
     if(updateCount > 0 && val > threshold)
     {
-        calcParams();
+        calcParams(deltatime);
         calcVector();
         updateCount = 0;
     }
 }
 
-void Cell::deletePoint(int id){
-    for(unsigned long int i = 0; i < maxNbPoints; i++){
+void Cell::deletePoint(int id, int arrayId)
+{
+    this->points[arrayId] = -1;
+    /*
+    for(unsigned long int i = 0; i < maxNbPoints; i++)
+    {
         if(id == this->points[i]){
             this->points[i] = -1;
             this->nbPoints--;
@@ -56,7 +60,7 @@ void Cell::deletePoint(int id){
             updateCount++;
             break;
         }
-    }
+    }*/
 
     //std::cerr<<"ERROR: try to delet a point that does not exist"<<std::endl;
 }
@@ -77,7 +81,7 @@ int Cell::addPoint(int id){
     return -1;
 }
 
-void Cell::calcParams(){
+void Cell::calcParams(float deltatime){
     float sum = 0.0f;
     float volTot = 0.0f;
     int nbPointsInCell = 0;
@@ -90,8 +94,12 @@ void Cell::calcParams(){
         nbPointsInCell++;
     }
 
-    this->temperature = nbPointsInCell > 0? sum/nbPointsInCell : 0;
-    this->pressure = volTot * volTot;//volTot > 0? this->temperature/volTot : 0;
+    this->pressure = (volTot);// * volTot);// / (maxNbPoints);//*maxNbPoints);//volTot > 0? this->temperature/volTot : 0;
+
+    float targetTemp = (nbPointsInCell > 0 ? sum/nbPointsInCell : 0) * (1+(this->pressure*0.1f));
+    //this->temperature += (targetTemp - this->temperature) * deltatime * TEMP_DIFFUSE_SPEED;
+    this->temperature = targetTemp;
+
     this->friction = nbPointsInCell/(float)maxNbPoints;
     this->friction = this->friction * this->friction;
 }
@@ -99,13 +107,14 @@ void Cell::calcParams(){
 void Cell::calcVector(){
     QVector3D sum = QVector3D(0,0,0);
     QVector3D voisins[6];
-    voisins[0] = QVector3D(-1,0,0); voisins[1] = QVector3D(1,0,0); voisins[2] = QVector3D(0,-1,0); voisins[3] = QVector3D(0,1,0); voisins[4] = QVector3D(0,0,-1); voisins[5] = QVector3D(0,0,1);
+    voisins[0] = QVector3D(-1,0,0); voisins[1] = QVector3D(1,0,0); voisins[2] = QVector3D(0,-1,0);
+    voisins[3] = QVector3D(0,1,0); voisins[4] = QVector3D(0,0,-1); voisins[5] = QVector3D(0,0,1);
 
     float diffPresure = 0.0;
 
 
     for(int i = 0; i < 6; i++){
-        Cell* neighbor = Grid::Instance()->getCell(x-voisins[i].x(), y-voisins[i].y(), z-voisins[i].z());
+        Cell* neighbor = Grid::Instance()->getCell(x+voisins[i].x(), y+voisins[i].y(), z+voisins[i].z());
         if(neighbor == nullptr){
             continue;
         }
@@ -115,7 +124,7 @@ void Cell::calcVector(){
     }
     float magn = sum.length();
     sum.normalize();
-    this->pressureVector = sum * magn;//* magn;
+    this->pressureVector = sum * magn;// * magn;
 }
 
 int Cell::getNbPoints(){

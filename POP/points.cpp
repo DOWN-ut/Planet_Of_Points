@@ -41,13 +41,13 @@ void Points::initGL(QOpenGLShaderProgram *program)
     }
 }
 
-void Points::paintGL(QOpenGLShaderProgram *program,int mode)
+void Points::paintGL(QOpenGLShaderProgram *program,int mode, int particlesDisplayAttributs)
 {
 
     for(unsigned int pIt = 0 ; pIt < points.size() ; ++pIt)
     {
         if(mode != 0 && mode-1 != (int)points[pIt].getElement()){continue;}
-        points[pIt].draw(program,baseSize);
+        points[pIt].draw(program,baseSize,particlesDisplayAttributs);
      }
 
 

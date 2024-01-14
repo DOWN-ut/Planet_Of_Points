@@ -58,7 +58,7 @@ void GravityManager::processAverageSpeed()
 void GravityManager::processBarycenters()
 {
     barycenters[0] = QVector3D(0,0,0);
-
+        return;
     const QVector<Point> points =  Points::Instance()->getPoints();
 
     for(Point p : points)

@@ -5,18 +5,20 @@
 #include "point.h"
 #include "grid.h"
 #include "glwidget.h"
-#include "math.h"
+#include <math.h>
 Point::Point()
 {
 
 }
 
-Point::Point(QVector3D p,Element e, int _id) : cellId(-1), id(_id), temperature(1)
-{
+Point::Point(QVector3D p,Element e, int _id) : cellId(-1), id(_id){
     position = p;
     element = e;
-    velocity = QVector3D((rand() / (float)RAND_MAX)*MAXVEL,(rand() / (float)RAND_MAX)*MAXVEL,(rand() / (float)RAND_MAX)*MAXVEL);
     mass = 1;
+    temperature = 1;// (rand() / (float)RAND_MAX)*TEMPMAX;
+
+    //velocity = QVector3D((rand() / (float)RAND_MAX)*MAXVEL,(rand() / (float)RAND_MAX)*MAXVEL,(rand() / (float)RAND_MAX)*MAXVEL);
+    velocity = QVector3D::crossProduct(p.normalized(),QVector3D(0,1,0)) * ((rand() / (float)RAND_MAX)*MAXVEL);
 }
 
 void Point::initGL()
@@ -50,22 +52,35 @@ float Point::getTemp()
 
 float Point::getVolume()
 {
-    return this->temperature * getSize();
+    return getSize() * (1+pow(this->temperature/TEMPMAX,2));
 }
 
 void Point::applyFriction(float deltaTime)
 {
     if(velocity.length() > 0.5f)
     {
-        float v = (Grid::Instance()->getCell(cellId)->getFriction() * deltaTime);
+        float v = (Grid::Instance()->getCell(cellId)->getFriction() * deltaTime) / (elementSizes[(int)element] * elementSizes[(int)element]);
         float val = (1 + v);
         //if(Grid::Instance()->getCell(cellId)->getFriction()>0)std::cout<<Grid::Instance()->getCell(cellId)->getFriction()<<std::endl;
         velocity /= val;
     }
 }
+
 void Point::applyPressure(float deltaTime)
 {
-    applyForce(Grid::Instance()->getCell(cellId)->getPressureVector() * getSize(), deltaTime);
+    applyForce(Grid::Instance()->getCell(cellId)->getPressureVector() * elementSizes[(int)element] * elementSizes[(int)element], deltaTime);
+}
+
+void Point::applyTemperature(float deltaTime)
+{
+    float targetTemp = Grid::Instance()->getCell(cellId)->getTemp();
+    float tempGradiant = abs(targetTemp - temperature);
+    float v = tempGradiant * deltaTime * TEMPERATURE_DIFFUSION_SPEED;
+
+    if(targetTemp > temperature){ temperature += v; }
+    else{ temperature -= v;}
+
+    temperature = temperature > TEMPMAX ? TEMPMAX : temperature ;
 }
 
 void Point::drawTriangle(QVector3D p0,QVector3D p1,QVector3D p2)
@@ -81,6 +96,10 @@ void Point::drawTriangle(QVector3D p0,QVector3D p1,QVector3D p2)
     glVertex3f(p2.x(),p2.y(),p2.z());
     n0 = p2 - position; n0.normalize();
     glNormal3f(n0.x(),n0.y(),n0.z());
+}
+
+QVector3D Point::getTempColor(){
+    return QVector3D(temperature/TEMPMAX, 0, 1 - temperature/TEMPMAX);
 }
 
 void Point::drawSphere(int slices, int stacks)
@@ -104,7 +123,7 @@ void Point::drawSphere(int slices, int stacks)
     drawTriangle(p5,p1,p4);
     glEnd();*/
 }
-void Point::draw(QOpenGLShaderProgram* program,float baseSize)
+void Point::draw(QOpenGLShaderProgram* program,float baseSize, int attributs)
 {
 
     float s = getSize() * baseSize;
@@ -130,7 +149,12 @@ void Point::draw(QOpenGLShaderProgram* program,float baseSize)
     vertices[5] = p5; normals[5] = position - p5;*/
 
     //vao.bind();
-    GLWidget::setDrawColor(getColor());
+    if(attributs == 0){
+        GLWidget::setDrawColor(getColor());
+    }else if(attributs == 1){
+        GLWidget::setDrawColor(getTempColor());
+    }
+
 
     QOpenGLExtraFunctions _functions = QOpenGLExtraFunctions(QOpenGLContext::currentContext());
     _functions.glEnableVertexAttribArray(0);
@@ -196,24 +220,23 @@ void Point::update(float deltaTime)
     {
         applyFriction(deltaTime);
         applyPressure(deltaTime);
+        applyTemperature(deltaTime);
     }
     position += velocity * deltaTime;
-
-    temperature = 1;
 
     QVector3D cpos = Grid::Instance()->cellId(position);
     int cid = Grid::Instance()->getId(cpos.x(),cpos.y(),cpos.z());
 
     if(cid == -1)
     {
-        velocity = QVector3D(0,0,0);
         position -= velocity * deltaTime;
+        velocity = QVector3D(0,0,0);
     }
     else if(cellId == -1)
     {
-        Grid::Instance()->getCell(cid)->addPoint(id);
+        cellArrayId = Grid::Instance()->getCell(cid)->addPoint(id);
         cellId = cid;
-        cout << Grid::Instance()->getCell(cid)->getNbPoints() << endl;
+        //cout << Grid::Instance()->getCell(cid)->getNbPoints() << endl;
     }
     else if(cid != cellId)
     {
@@ -228,8 +251,8 @@ void Point::update(float deltaTime)
            // cout << "Cannot mode to cell " << cid << endl;
         }
         else{
+            Grid::Instance()->getCell(cellId)->deletePoint(id,cellArrayId);
             cellArrayId = tempcellArrayId;
-            Grid::Instance()->getCell(cellId)->deletePoint(id);
             cellId = cid;
         }
     }

@@ -144,6 +144,7 @@ private:
     int color_location;
     int gridDisplayMode;
     int particlesDisplayMode;
+    int particlesDisplayAttributs;
 
     QOpenGLShaderProgram *m_program;
 

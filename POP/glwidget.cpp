@@ -72,6 +72,7 @@ GLWidget::GLWidget(QWidget *parent)
       grid(Grid(30,75)),
       gridDisplayMode(0),
       particlesDisplayMode(0),
+      particlesDisplayAttributs(0),
       m_program(0)
 {
     m_core = QSurfaceFormat::defaultFormat().profile() == QSurfaceFormat::CoreProfile;
@@ -194,6 +195,7 @@ void GLWidget::keyPressEvent(QKeyEvent *event)
 
     case Qt::Key_G: gridDisplayMode++; if(gridDisplayMode > 2){gridDisplayMode = 0;} break;
     case Qt::Key_P: particlesDisplayMode++; if(particlesDisplayMode > 3){particlesDisplayMode=0;}break;
+    case Qt::Key_O: particlesDisplayAttributs++; if(particlesDisplayAttributs > 1){particlesDisplayAttributs=0;}break;
     }
 }
 
@@ -350,7 +352,7 @@ void GLWidget::paintGL()
 
     //glDrawArrays(GL_TRIANGLES, 0, m_logo.vertexCount());
 
-    m_points.paintGL(m_program,particlesDisplayMode);
+    m_points.paintGL(m_program, particlesDisplayMode, particlesDisplayAttributs);
     grid.paintGL(m_program,gridDisplayMode);
 
     m_program->release();

@@ -49,7 +49,7 @@ public:
     void initGL(QOpenGLShaderProgram *program);
 
     void update(float deltaTime);
-    void paintGL(QOpenGLShaderProgram *program,int mode);
+    void paintGL(QOpenGLShaderProgram *program,int mode, int attributs);
 
     void initBuffer(QOpenGLFunctions* context);
 

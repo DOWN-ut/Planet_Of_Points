@@ -65,9 +65,9 @@ Window::Window(MainWindow *mw)
 {
     glWidget = new GLWidget;
 
-    xSlider = createSlider();
-    ySlider = createSlider();
-    zSlider = createSlider();
+    //xSlider = createSlider();
+    //ySlider = createSlider();
+    //zSlider = createSlider();
 
     //A completer, connecter les sliders de cette classe avec le glWidget pour mettre à jour la rotation
     // et inversement
@@ -83,9 +83,9 @@ Window::Window(MainWindow *mw)
     QVBoxLayout *mainLayout = new QVBoxLayout;
     QHBoxLayout *container = new QHBoxLayout;
     container->addWidget(glWidget);
-    container->addWidget(xSlider);
-    container->addWidget(ySlider);
-    container->addWidget(zSlider);
+    //container->addWidget(xSlider);
+    //container->addWidget(ySlider);
+    //container->addWidget(zSlider);
 
     QWidget *w = new QWidget;
     w->setLayout(container);
@@ -93,11 +93,11 @@ Window::Window(MainWindow *mw)
 
     setLayout(mainLayout);
 
-    xSlider->setValue(15 * 16);
-    ySlider->setValue(345 * 16);
-    zSlider->setValue(0 * 16);
+    //xSlider->setValue(15 * 16);
+    //ySlider->setValue(345 * 16);
+    //zSlider->setValue(0 * 16);
 
-    setWindowTitle(tr("Qt OpenGL"));
+    setWindowTitle(tr("Planet Of Point"));
 }
 
 QSlider *Window::createSlider()

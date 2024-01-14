@@ -67,17 +67,17 @@ void Grid::paintGL(QOpenGLShaderProgram *program, int mode)
                 if(mode == 0){continue;}
 
                 float gps = size/(float)resolution;
-                glPointSize(gps * 10);//getCell(x,y,z).getDisplaySize());
+                glPointSize(gps * 5);//getCell(x,y,z).getDisplaySize());
 
                 if(mode == 1)
                 {
-                    float cc = getCell(x,y,z)->getNbPoints() / 10.0f; //cout << getCell(x,y,z).getNbPoints() << endl;
-                    GLWidget::setDrawColor(QVector3D(1,1,1),cc > 0.4f ? cc : 0);//points[pIt].getColor());
+                    float cc = getCell(x,y,z)->getTemp() / getCell(x,y,z)->getMaxNbPoints(); //cout << getCell(x,y,z).getNbPoints() << endl;
+                    GLWidget::setDrawColor(QVector3D(cc,0,0),cc > 0.4f ? cc : 0);//points[pIt].getColor());
                 }
                 else if(mode == 2)
                 {
                     float cc = getCell(x,y,z)->getPressure() / 10.0f; //cout << getCell(x,y,z).getNbPoints() << endl;
-                    GLWidget::setDrawColor(QVector3D(1,1,1),cc > 0.4f ? cc : 0);//points[pIt].getColor());
+                    GLWidget::setDrawColor(QVector3D(cc,0,0),cc > 0.4f ? cc : 0);//points[pIt].getColor());
                 }
 
                 glBegin(GL_POINTS);

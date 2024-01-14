@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QOpenGLShaderProgram>
 #include <QVector3D>
+#include <math.h>
 class Grid;
 class GLWidget;
 
@@ -18,7 +19,9 @@ enum Element
     WATER,ROCK,METAL
 };
 
-#define MAXVEL 0.2
+#define MAXVEL 0.4
+#define TEMPMAX 100
+#define TEMPERATURE_DIFFUSION_SPEED 2
 
 class Point
 {
@@ -57,6 +60,7 @@ protected:
 
     void applyFriction(float deltaTime);
     void applyPressure(float deltaTime);
+    void applyTemperature(float deltaTime);
 
 public:
     Point();
@@ -69,7 +73,8 @@ public:
 
     Element getElement(){return element;}
     QVector3D getColor(){return elementColors[(int)element];}
-    float getSize(){return elementSizes[(int)element] * temperature;}
+    QVector3D getTempColor();
+    float getSize(){return elementSizes[(int)element] * (0.5+(0.5*pow(temperature/TEMPMAX,2)));}
 
     QVector3D getPosition(){return position;}
     QVector3D getVelocity(){return velocity;}
@@ -78,7 +83,7 @@ public:
 
     void drawTriangle(QVector3D p0,QVector3D p1,QVector3D p2);
     void drawSphere(int slices, int stacks);//float r,
-    void draw(QOpenGLShaderProgram *program,float baseSize);
+    void draw(QOpenGLShaderProgram *program,float baseSize,int attributs);
 
     float getMass();
     float getTemp();
