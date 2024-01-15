@@ -38,6 +38,7 @@ class Cell
         void update(float deltatime);
 
         void deletePoint(int id,int arrayId);
+        int* getPoints(){return points;}
         int addPoint(int id);
         void calcParams(float deltatime);
         void calcVector();

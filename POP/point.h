@@ -61,6 +61,7 @@ protected:
     void applyFriction(float deltaTime);
     void applyPressure(float deltaTime);
     void applyTemperature(float deltaTime);
+    void applyCollisions(float deltaTime);
 
 public:
     Point();

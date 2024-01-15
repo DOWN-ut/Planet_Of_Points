@@ -83,6 +83,25 @@ void Point::applyTemperature(float deltaTime)
     temperature = temperature > TEMPMAX ? TEMPMAX : temperature ;
 }
 
+void Point::applyCollisions(float deltaTime){
+    int* voisins = Grid::Instance()->getCell(cellId)->getPoints();
+    int nbVoisnsMax = Grid::Instance()->getCell(cellId)->getMaxNbPoints();
+
+    QVector3D distVoisin;
+    float radius;
+
+    for(int i = 0; i < nbVoisnsMax; i++){
+        if(voisins[i] == -1) continue;
+
+        distVoisin = Points::Instance()->getPoints()[voisins[i]].getPosition() - this->position;
+        radius = this->getSize() *0.2f * 0.5f + Points::Instance()->getPoints()[voisins[i]].getSize() *0.2f *0.5f;
+
+        if(distVoisin.length() < radius){
+            this->position -= distVoisin.normalized() * (radius - distVoisin.length());
+        }
+    }
+}
+
 void Point::drawTriangle(QVector3D p0,QVector3D p1,QVector3D p2)
 {
     glVertex3f(p0.x(),p0.y(),p0.z());
@@ -221,6 +240,7 @@ void Point::update(float deltaTime)
         applyFriction(deltaTime);
         applyPressure(deltaTime);
         applyTemperature(deltaTime);
+        applyCollisions(deltaTime);
     }
     position += velocity * deltaTime;
 
